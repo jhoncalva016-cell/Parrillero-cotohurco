@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Admin | Parrillero El Cotohurco</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="images/logo.png" type="image/png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="admin" class="admin-shell">
+
+<!-- ---------- LOGIN ---------- -->
+<div class="admin-login" id="admin-login">
+  <span class="eyebrow">Acceso restringido</span>
+  <h2 style="margin-top:.5rem;">Panel Administrativo</h2>
+  <p style="color:var(--color-text-soft);font-size:.9rem;">Ingresa la contraseña para actualizar la carta, precios, disponibilidad y promociones.</p>
+  <form id="login-form">
+    <input type="password" id="login-password" placeholder="Contraseña" required autocomplete="current-password">
+    <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
+  </form>
+  <p id="login-error" style="color:var(--color-ember);font-size:.85rem;display:none;margin-top:8px;">Contraseña incorrecta.</p>
+  <p style="font-size:.75rem;color:#9c8f7e;margin-top:18px;">Contraseña por defecto: <code>cothourco2026</code> (puedes cambiarla luego en la pestaña "Cuenta").</p>
+</div>
+
+<!-- ---------- PANEL (oculto hasta iniciar sesión) ---------- -->
+<div id="admin-app" style="display:none;">
+
+  <header class="admin-header">
+    <div class="container">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <img src="images/logo.png" alt="Parrillero El Cotohurco" style="height:44px;width:auto;">
+        <strong>Panel Admin — Parrillero El Cotohurco</strong>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <a href="index.html" class="btn btn-outline-light btn-sm">Ver sitio</a>
+        <button class="btn btn-outline-light btn-sm" id="logout-btn">Cerrar sesión</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-tab="general">General</button>
+      <button class="admin-tab" data-tab="servicios">Servicios</button>
+      <button class="admin-tab" data-tab="carta">La Carta</button>
+      <button class="admin-tab" data-tab="diario">Especiales del día</button>
+      <button class="admin-tab" data-tab="promos">Promociones</button>
+      <button class="admin-tab" data-tab="domicilio">Domicilio</button>
+      <button class="admin-tab" data-tab="cuenta">Cuenta</button>
+    </div>
+
+    <!-- ===== GENERAL ===== -->
+    <div class="admin-panel active" id="panel-general">
+      <div class="admin-card">
+        <h3>Información del restaurante</h3>
+        <form id="form-general" class="form-grid">
+          <div class="form-field"><label>Nombre</label><input type="text" name="name" required></div>
+          <div class="form-field"><label>Slogan / tagline</label><input type="text" name="tagline"></div>
+          <div class="form-field full"><label>Descripción</label><textarea name="description"></textarea></div>
+          <div class="form-field"><label>Dirección</label><input type="text" name="address"></div>
+          <div class="form-field"><label>Teléfono</label><input type="text" name="phone"></div>
+          <div class="form-field"><label>WhatsApp</label><input type="text" name="whatsapp"></div>
+          <div class="form-field"><label>Horario (días)</label><input type="text" name="hoursWeekday"></div>
+          <div class="form-field"><label>Nota de horario</label><input type="text" name="hoursNote"></div>
+          <div class="form-field"><label>Facebook (URL)</label><input type="text" name="facebook"></div>
+          <div class="form-field"><label>Instagram (URL)</label><input type="text" name="instagram"></div>
+          <div class="form-actions full">
+            <button type="submit" class="btn btn-primary">Guardar información</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ===== SERVICIOS ===== -->
+    <div class="admin-panel" id="panel-servicios">
+      <div class="admin-card">
+        <h3 id="svc-form-title">Agregar servicio</h3>
+        <form id="form-servicio" class="form-grid">
+          <input type="hidden" name="id">
+          <div class="form-field"><label>Ícono (emoji)</label><input type="text" name="icon" placeholder="🍽️" required></div>
+          <div class="form-field"><label>Título</label><input type="text" name="title" required></div>
+          <div class="form-field full"><label>Descripción</label><textarea name="desc"></textarea></div>
+          <div class="form-actions full">
+            <button type="submit" class="btn btn-primary">Guardar servicio</button>
+            <button type="button" class="btn btn-outline" id="svc-cancel">Cancelar edición</button>
+          </div>
+        </form>
+      </div>
+      <div class="admin-card">
+        <h3>Servicios actuales</h3>
+        <table class="admin-table"><thead><tr><th>Icono</th><th>Título</th><th>Descripción</th><th>Acciones</th></tr></thead>
+        <tbody id="svc-table-body"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ===== CARTA ===== -->
+    <div class="admin-panel" id="panel-carta">
+      <div class="admin-card">
+        <h3 id="menu-form-title">Agregar plato a la carta</h3>
+        <form id="form-menu" class="form-grid">
+          <input type="hidden" name="id">
+          <div class="form-field"><label>Nombre del plato</label><input type="text" name="name" required></div>
+          <div class="form-field">
+            <label>Categoría</label>
+            <select name="category" id="menu-category-select" required></select>
+          </div>
+          <div class="form-field full"><label>Descripción</label><textarea name="description"></textarea></div>
+          <div class="form-field"><label>Precio local ($)</label><input type="number" step="0.01" min="0" name="priceLocal" required></div>
+          <div class="form-field"><label>¿Destacar en Inicio?</label>
+            <select name="featured"><option value="false">No</option><option value="true">Sí</option></select>
+          </div>
+          <div class="form-field"><label>Estado</label>
+            <select name="active"><option value="true">Activo (visible)</option><option value="false">Oculto</option></select>
+          </div>
+          <div class="form-actions full">
+            <button type="submit" class="btn btn-primary">Guardar plato</button>
+            <button type="button" class="btn btn-outline" id="menu-cancel">Cancelar edición</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="admin-card">
+        <h3>Categorías de la carta</h3>
+        <form id="form-category" class="form-grid">
+          <div class="form-field"><label>Nombre de nueva categoría</label><input type="text" name="catName" placeholder="Ej: Postres" required></div>
+          <div class="form-actions"><button type="submit" class="btn btn-outline">Agregar categoría</button></div>
+        </form>
+        <div id="cat-list" style="margin-top:10px;font-size:.85rem;color:var(--color-text-soft);"></div>
+      </div>
+
+      <div class="admin-card">
+        <h3>Platos actuales</h3>
+        <table class="admin-table"><thead><tr><th>Plato</th><th>Categoría</th><th>Local</th><th>Llevar</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="menu-table-body"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ===== ESPECIALES DEL DÍA ===== -->
+    <div class="admin-panel" id="panel-diario">
+      <div class="note-card">Actualiza aquí cada mañana el precio y las unidades disponibles de humitas, quimbolitos, tamales, empanadas de verde y cualquier otro aperitivo especial.</div>
+      <div class="admin-card">
+        <h3 id="daily-form-title">Agregar / actualizar producto del día</h3>
+        <form id="form-daily" class="form-grid">
+          <input type="hidden" name="id">
+          <div class="form-field"><label>Nombre</label><input type="text" name="name" required></div>
+          <div class="form-field">
+            <label>Subcategoría</label>
+            <select name="subcategory">
+              <option value="desayuno">Desayuno</option>
+              <option value="almuerzo">Almuerzo</option>
+              <option value="aperitivos">Aperitivo especial</option>
+            </select>
+          </div>
+          <div class="form-field full"><label>Descripción</label><textarea name="description"></textarea></div>
+          <div class="form-field"><label>Precio ($)</label><input type="number" step="0.01" min="0" name="price" required></div>
+          <div class="form-field"><label>Unidades disponibles hoy</label><input type="number" min="0" name="stock" required></div>
+          <div class="form-field"><label>Unidad de medida</label><input type="text" name="unit" placeholder="unidad, docena, etc." value="unidad"></div>
+          <div class="form-field"><label>Estado</label>
+            <select name="active"><option value="true">Publicado hoy</option><option value="false">No publicar</option></select>
+          </div>
+          <div class="form-actions full">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="button" class="btn btn-outline" id="daily-cancel">Cancelar edición</button>
+          </div>
+        </form>
+      </div>
+      <div class="admin-card">
+        <h3>Productos del día</h3>
+        <table class="admin-table"><thead><tr><th>Producto</th><th>Sub.</th><th>Precio</th><th>Stock</th><th>Actualizado</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="daily-table-body"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ===== PROMOCIONES ===== -->
+    <div class="admin-panel" id="panel-promos">
+      <div class="admin-card">
+        <h3 id="promo-form-title">Agregar promoción / lanzamiento de temporada</h3>
+        <form id="form-promo" class="form-grid">
+          <input type="hidden" name="id">
+          <div class="form-field"><label>Título</label><input type="text" name="title" required></div>
+          <div class="form-field"><label>Etiqueta (badge)</label><input type="text" name="badge" placeholder="Ej: Nuevo, Temporada, 2x1"></div>
+          <div class="form-field full"><label>Descripción</label><textarea name="description"></textarea></div>
+          <div class="form-field"><label>Precio / oferta (texto libre)</label><input type="text" name="price" placeholder="Ej: $8.99 combo"></div>
+          <div class="form-field"><label>Válido desde</label><input type="date" name="startDate"></div>
+          <div class="form-field"><label>Válido hasta</label><input type="date" name="endDate"></div>
+          <div class="form-field"><label>Estado</label>
+            <select name="active"><option value="true">Activa</option><option value="false">Inactiva</option></select>
+          </div>
+          <div class="form-actions full">
+            <button type="submit" class="btn btn-primary">Guardar promoción</button>
+            <button type="button" class="btn btn-outline" id="promo-cancel">Cancelar edición</button>
+          </div>
+        </form>
+      </div>
+      <div class="admin-card">
+        <h3>Promociones</h3>
+        <table class="admin-table"><thead><tr><th>Título</th><th>Vigencia</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="promo-table-body"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ===== DOMICILIO ===== -->
+    <div class="admin-panel" id="panel-domicilio">
+      <div class="admin-card">
+        <h3>Reglas generales</h3>
+        <form id="form-delivery-rules" class="form-grid">
+          <div class="form-field"><label>Cargo por empaque - para llevar ($)</label><input type="number" step="0.01" min="0" name="packagingFee" required></div>
+          <div class="form-field"><label>Tarifa mínima de domicilio ($)</label><input type="number" step="0.01" min="0" name="minFee" required></div>
+          <div class="form-field full"><label>Nota de pedido mínimo</label><input type="text" name="maxOrderDishesNote"></div>
+          <div class="form-field full"><label>Nota general de tarifas</label><textarea name="tiersNote"></textarea></div>
+          <div class="form-actions full"><button type="submit" class="btn btn-primary">Guardar reglas</button></div>
+        </form>
+      </div>
+
+      <div class="admin-card">
+        <h3 id="zone-form-title">Agregar / editar zona de entrega</h3>
+        <form id="form-zone" class="form-grid">
+          <input type="hidden" name="id">
+          <div class="form-field"><label>Nombre de la zona</label><input type="text" name="label" required></div>
+          <div class="form-field"><label>Distancia (referencia)</label><input type="text" name="distanceNote" placeholder="Ej: 0 - 2 km"></div>
+          <div class="form-field"><label>Tarifa ($, dejar 0 para "Consultar")</label><input type="number" step="0.01" min="0" name="fee"></div>
+          <div class="form-actions full">
+            <button type="submit" class="btn btn-primary">Guardar zona</button>
+            <button type="button" class="btn btn-outline" id="zone-cancel">Cancelar edición</button>
+          </div>
+        </form>
+      </div>
+      <div class="admin-card">
+        <h3>Zonas de entrega</h3>
+        <table class="admin-table"><thead><tr><th>Zona</th><th>Distancia</th><th>Tarifa</th><th>Acciones</th></tr></thead>
+        <tbody id="zone-table-body"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ===== CUENTA ===== -->
+    <div class="admin-panel" id="panel-cuenta">
+      <div class="admin-card" style="max-width:420px;">
+        <h3>Cambiar contraseña del panel</h3>
+        <form id="form-password">
+          <div class="form-field"><label>Contraseña actual</label><input type="password" name="current" required></div>
+          <div class="form-field" style="margin-top:12px;"><label>Nueva contraseña</label><input type="password" name="next" required minlength="4"></div>
+          <div class="form-actions"><button type="submit" class="btn btn-primary">Actualizar contraseña</button></div>
+        </form>
+      </div>
+      <div class="admin-card" style="max-width:420px;">
+        <h3>Restaurar valores de fábrica</h3>
+        <p style="font-size:.85rem;color:var(--color-text-soft);">Esto borrará todos los cambios guardados en este navegador y volverá a los datos originales del proyecto.</p>
+        <button class="btn btn-outline" id="reset-btn">Restaurar valores de fábrica</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
