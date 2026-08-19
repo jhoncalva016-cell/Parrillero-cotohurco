@@ -27,7 +27,7 @@ const DEFAULT_DATA = {
     tagline: "¡Delicioso como en Casa!",
     description:
       "Especialistas en parrilladas, carnes a la brasa y comida típica ecuatoriana. Sabor de casa, con el toque ahumado de la parrilla.",
-    address: "",
+    address: "Yaruquí, San José, calle Eugenio Espejo y pasaje E2E",
     phone: "0900 000 000",
     whatsapp: "0900000000",
     hoursWeekday: "Miércoles a Lunes: 08:00 - 21:00",

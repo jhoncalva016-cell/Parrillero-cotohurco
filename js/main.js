@@ -81,6 +81,11 @@ function renderFooterInfo(data) {
   document.querySelectorAll(".addr-row").forEach(row => {
     row.style.display = r.address ? "" : "none";
   });
+  document.querySelectorAll("[data-map-link]").forEach(a => {
+    a.href = r.address
+      ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(r.address)
+      : "#";
+  });
 }
 
 /* ---------------- SERVICIOS ---------------- */
