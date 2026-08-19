@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Para Llevar y Domicilios | Parrillero El Cotohurco</title>
-<meta name="description" content="Conoce los cargos por empaque y las tarifas de envío a domicilio de Parrillero El Cotohurco.">
+<title>La Carta | Parrillero El Cotohurco</title>
+<meta name="description" content="Carta completa de Parrillero El Cotohurco: parrilladas, churrascos, menestras, asados y mariscos con precios para local y para llevar.">
 <link rel="icon" href="images/logo.png" type="image/png">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-page="domicilios">
+<body data-page="carta">
 
 <header class="site-header">
   <div class="topbar">
@@ -28,58 +28,30 @@
     <button class="nav-toggle" aria-label="Menú">☰</button>
     <ul class="nav-links">
       <li><a href="index.html">Inicio</a></li>
-      <li><a href="carta.html">La Carta</a></li>
+      <li><a href="carta.html" class="active">La Carta</a></li>
       <li><a href="desayunos.html">Desayunos &amp; Aperitivos</a></li>
       <li><a href="promociones.html">Promociones</a></li>
       <li><a href="servicios.html">Servicios</a></li>
-      <li><a href="domicilios.html" class="active">Domicilios</a></li>
+      <li><a href="domicilios.html">Domicilios</a></li>
     </ul>
   </nav>
 </header>
 
 <section class="page-hero">
   <div class="container">
-    <span class="eyebrow">Para llevar y a domicilio</span>
-    <h1>Costos de Empaque y Envío</h1>
-    <p>Consulta cuánto cuesta llevar tu pedido a casa o pedirlo para llevar, y usa la calculadora para estimar el cargo adicional.</p>
+    <span class="eyebrow">Todo nuestro sabor</span>
+    <h1>La Carta</h1>
+    <p>Parrilladas, churrascos, menestras, asados y mariscos. Filtra por categoría y descubre tu próximo plato favorito.</p>
   </div>
 </section>
 
 <section class="section">
   <div class="container">
-    <div class="delivery-box">
-      <div>
-        <h3>Zonas y tarifas de referencia</h3>
-        <div class="tier-list" id="tier-list"></div>
-        <p id="delivery-note" style="margin-top:16px;font-size:.85rem;color:var(--color-text-soft);"></p>
-      </div>
-      <div>
-        <h3>Calculadora de estimado</h3>
-        <form class="calc-form" id="calc-form">
-          <div class="form-field">
-            <label for="calc-mode">Tipo de pedido</label>
-            <select id="calc-mode">
-              <option value="local">Consumo en el local</option>
-              <option value="llevar">Para llevar</option>
-              <option value="domicilio" selected>A domicilio</option>
-            </select>
-          </div>
-          <div class="form-field form-field-zone">
-            <label for="calc-zone">Zona de entrega</label>
-            <select id="calc-zone"></select>
-          </div>
-          <div class="form-field">
-            <label for="calc-qty">Número de platos (mínimo 1, pedido de 1 a 3 platos)</label>
-            <input type="number" id="calc-qty" min="1" value="1">
-          </div>
-        </form>
-        <div class="calc-result" id="calc-result"></div>
-      </div>
+    <div class="note-card">
+      Los precios mostrados como <strong>"Local"</strong> aplican para servicio dentro de las instalaciones. Los pedidos <strong>para llevar</strong> incluyen un cargo adicional de $0.25 por empaque. Consulta el costo de <a href="domicilios.html">envío a domicilio</a>, que varía según distancia y número de platos.
     </div>
-
-    <div class="note-card" style="margin-top:2rem;">
-      Este cálculo es un <strong>estimado</strong> del cargo adicional (empaque y/o envío) y no incluye el valor de los platos elegidos. Para pedidos grandes, distancias fuera de las zonas listadas, o confirmación final del costo, comunícate al <span data-footer-phone>teléfono del restaurante</span>.
-    </div>
+    <div class="filter-bar" id="filter-bar"></div>
+    <div class="dish-grid" id="dish-grid"></div>
   </div>
 </section>
 
