@@ -82,9 +82,11 @@ function renderFooterInfo(data) {
     row.style.display = r.address ? "" : "none";
   });
   document.querySelectorAll("[data-map-link]").forEach(a => {
-    a.href = r.address
-      ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(r.address)
-      : "#";
+    a.href = r.mapsUrl
+      ? r.mapsUrl
+      : (r.address
+          ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(r.address)
+          : "#");
   });
 }
 
