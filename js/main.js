@@ -71,21 +71,30 @@ function renderFooterInfo(data) {
   const map = {
     "[data-footer-address]": r.address,
     "[data-footer-phone]": r.phone,
+    "[data-footer-phone2]": r.phoneLandline,
     "[data-footer-hours]": r.hoursWeekday,
     "[data-footer-hours-note]": r.hoursNote
   };
   Object.keys(map).forEach(sel => {
-    const node = document.querySelector(sel);
-    if (node) node.textContent = map[sel];
+    document.querySelectorAll(sel).forEach(node => {
+      node.textContent = map[sel];
+    });
   });
   document.querySelectorAll(".addr-row").forEach(row => {
     row.style.display = r.address ? "" : "none";
   });
-  document.querySelectorAll("[data-phone-link]").forEach(a => {
-    const digits = (r.phone || "").replace(/\D/g, "");
+  function toTelHref(rawPhone) {
+    const digits = (rawPhone || "").replace(/\D/g, "");
     let tel = digits;
     if (digits.startsWith("0")) tel = "593" + digits.slice(1);
-    a.href = digits ? ("tel:+" + tel) : "#";
+    return digits ? ("tel:+" + tel) : "#";
+  }
+  document.querySelectorAll("[data-phone-link]").forEach(a => {
+    a.href = toTelHref(r.phone);
+  });
+  document.querySelectorAll("[data-phone2-link]").forEach(a => {
+    a.href = toTelHref(r.phoneLandline);
+    a.style.display = r.phoneLandline ? "" : "none";
   });
   document.querySelectorAll("[data-map-link]").forEach(a => {
     a.href = r.mapsUrl

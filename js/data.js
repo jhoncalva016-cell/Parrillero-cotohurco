@@ -30,6 +30,7 @@ const DEFAULT_DATA = {
     address: "Yaruquí, San José, calle Eugenio Espejo y pasaje E2E",
     mapsUrl: "https://www.google.com/maps?q=-0.1633784,-78.3127286&z=17&hl=es",
     phone: "0998645322",
+    phoneLandline: "02 2779953",
     whatsapp: "0998645322",
     hoursWeekday: "Lun–Jue 07:00–19:30 · Vie–Sáb 07:00–22:00 · Dom 07:00–16:00",
     hoursNote: "Atendemos los 7 días de la semana",
