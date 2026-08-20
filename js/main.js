@@ -81,6 +81,12 @@ function renderFooterInfo(data) {
   document.querySelectorAll(".addr-row").forEach(row => {
     row.style.display = r.address ? "" : "none";
   });
+  document.querySelectorAll("[data-phone-link]").forEach(a => {
+    const digits = (r.phone || "").replace(/\D/g, "");
+    let tel = digits;
+    if (digits.startsWith("0")) tel = "593" + digits.slice(1);
+    a.href = digits ? ("tel:+" + tel) : "#";
+  });
   document.querySelectorAll("[data-map-link]").forEach(a => {
     a.href = r.mapsUrl
       ? r.mapsUrl
