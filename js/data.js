@@ -61,6 +61,7 @@ const DEFAULT_DATA = {
     {
       id: "svc-4",
       icon: "🅿️",
+      iconImage: "images/icon-parking.png",
       title: "Parqueadero",
       desc: "Espacio disponible para que dejes tu vehículo mientras disfrutas de tu comida."
     },
@@ -73,6 +74,7 @@ const DEFAULT_DATA = {
     {
       id: "svc-6",
       icon: "📶",
+      iconImage: "images/icon-wifi.png",
       title: "WiFi gratis",
       desc: "Conexión a internet disponible para nuestros comensales."
     }

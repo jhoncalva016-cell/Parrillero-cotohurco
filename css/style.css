@@ -355,6 +355,14 @@ p{margin:0 0 1rem;}
 }
 .service-card:hover{transform:translateY(-4px);}
 .service-card .icon{font-size:2rem;margin-bottom:.6rem;display:block;}
+.service-card .icon-img{
+  height:44px;
+  width:auto;
+  max-width:44px;
+  object-fit:contain;
+  margin-bottom:.6rem;
+  display:block;
+}
 .service-card h3{font-size:1.05rem;margin-bottom:.4rem;}
 .service-card p{font-size:.92rem;color:var(--color-text-soft);margin:0;}
 

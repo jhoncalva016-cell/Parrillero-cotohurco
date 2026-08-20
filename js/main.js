@@ -111,9 +111,12 @@ function renderServices(data, targetSel) {
   if (!target) return;
   target.innerHTML = "";
   data.services.forEach(s => {
+    const iconHTML = s.iconImage
+      ? `<img class="icon-img" src="${s.iconImage}" alt="${s.title}">`
+      : `<span class="icon">${s.icon}</span>`;
     target.appendChild(el(`
       <div class="service-card">
-        <span class="icon">${s.icon}</span>
+        ${iconHTML}
         <h3>${s.title}</h3>
         <p>${s.desc}</p>
       </div>
