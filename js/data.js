@@ -202,6 +202,28 @@ const DEFAULT_DATA = {
   /* Disponibilidad en unidades — pensado para actualizarse a diario */
   dailySpecials: [
     {
+      id: "dia-5",
+      subcategory: "desayuno",
+      name: "Desayuno Típico",
+      description: "Desayuno del día: bolón o tortilla, huevo, café o jugo. Confirma precio y stock del día.",
+      price: 0,
+      stock: 0,
+      unit: "porción",
+      active: false,
+      updatedAt: ""
+    },
+    {
+      id: "dia-6",
+      subcategory: "almuerzo",
+      name: "Almuerzo del Día",
+      description: "Menú ejecutivo: sopa, segundo a elección y jugo natural. Confirma precio y stock del día.",
+      price: 0,
+      stock: 0,
+      unit: "porción",
+      active: false,
+      updatedAt: ""
+    },
+    {
       id: "dia-1",
       subcategory: "aperitivos",
       name: "Humitas",
