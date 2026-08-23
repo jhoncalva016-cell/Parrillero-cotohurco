@@ -70,7 +70,7 @@ function renderRestaurantInfo(data) {
 function renderFooterInfo(data) {
   const r = data.restaurant;
   const map = {
-    "[data-footer-address]": r.address,
+    "[data-footer-address]": r.address ? ("Quito, Ecuador (UIO) – " + r.address) : "",
     "[data-footer-phone]": r.phone,
     "[data-footer-phone2]": r.phoneLandline,
     "[data-footer-hours]": r.hoursWeekday,
@@ -90,8 +90,10 @@ function renderFooterInfo(data) {
     if (digits.startsWith("0")) tel = "593" + digits.slice(1);
     return digits ? ("tel:+" + tel) : "#";
   }
+  // El número de celular (📞) queda sincronizado directo con WhatsApp;
+  // si no hay número de WhatsApp configurado, cae de respaldo a la llamada normal.
   document.querySelectorAll("[data-phone-link]").forEach(a => {
-    a.href = toTelHref(r.phone);
+    a.href = toWhatsAppLink(r.whatsapp, "Hola, quisiera más información.") || toTelHref(r.phone);
   });
   document.querySelectorAll("[data-phone2-link]").forEach(a => {
     a.href = toTelHref(r.phoneLandline);
@@ -129,13 +131,17 @@ function applySocialLinks(data) {
       a.style.display = "none";
     }
   });
-  const anySocial = Object.values(socialLinks).some(Boolean);
+  // El icono de WhatsApp ya no se muestra en la fila de redes (ver [data-phone-link]
+  // más arriba, que ahora abre WhatsApp directo); la fila solo depende de fb/ig/tiktok.
+  const anySocial = ["facebook", "instagram", "tiktok"].some(k => socialLinks[k]);
   document.querySelectorAll("[data-social-icons]").forEach(wrap => {
     wrap.style.display = anySocial ? "" : "none";
   });
 
+  // El buzón de "Sugerencias y elogios" queda sincronizado con Facebook;
+  // si aún no hay Facebook configurado, usa feedbackUrl y luego WhatsApp de respaldo.
   document.querySelectorAll("[data-feedback-link]").forEach(a => {
-    const url = r.feedbackUrl || toWhatsAppLink(r.whatsapp, "Hola, quiero dejar una sugerencia o un elogio para el restaurante.");
+    const url = r.facebook || r.feedbackUrl || toWhatsAppLink(r.whatsapp, "Hola, quiero dejar una sugerencia o un elogio para el restaurante.");
     const wrap = a.closest("p");
     if (url) {
       a.href = url;
@@ -342,7 +348,6 @@ function promoEmptyStateHTML() {
     <div class="empty-state empty-state-social">
       <p>No hay promociones activas por el momento. ¡Síguenos para no perderte las próximas!</p>
       <div class="social-icons social-icons--light" data-social-icons>
-        <a href="#" data-social="whatsapp" target="_blank" rel="noopener" title="WhatsApp"><img src="images/social-whatsapp.png" alt="WhatsApp"></a>
         <a href="#" data-social="facebook" target="_blank" rel="noopener" title="Facebook"><img src="images/social-facebook.png" alt="Facebook"></a>
         <a href="#" data-social="instagram" target="_blank" rel="noopener" title="Instagram"><img src="images/social-instagram.png" alt="Instagram"></a>
         <a href="#" data-social="tiktok" target="_blank" rel="noopener" title="TikTok"><img src="images/social-tiktok.png" alt="TikTok"></a>

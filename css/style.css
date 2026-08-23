@@ -615,6 +615,12 @@ p{margin:0 0 1rem;}
 .footer-grid p, .footer-grid a{font-size:.88rem;color:rgba(247,236,217,0.75);}
 .footer-grid ul li{margin-bottom:8px;}
 .footer-grid a:hover{color:var(--color-gold);}
+.footer-grid .hours-lead{
+  font-size:.82rem;
+  font-style:italic;
+  color:rgba(247,236,217,0.62);
+  margin:0 0 6px;
+}
 .footer-grid .social-label{
   font-family:var(--font-head);
   font-size:.78rem;

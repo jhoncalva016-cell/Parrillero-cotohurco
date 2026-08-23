@@ -33,7 +33,7 @@ const DEFAULT_DATA = {
     phoneLandline: "02 2779953",
     whatsapp: "0998645322",
     hoursWeekday: "Lun–Jue 07:00–19:30 · Vie–Sáb 07:00–22:00 · Dom 07:00–16:00",
-    hoursNote: "Atendemos los 7 días de la semana",
+    hoursNote: "Horario de atención",
     facebook: "",
     instagram: "",
     tiktok: "",
