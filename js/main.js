@@ -104,6 +104,46 @@ function renderFooterInfo(data) {
           ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(r.address)
           : "#");
   });
+
+  const socialLinks = {
+    whatsapp: toWhatsAppLink(r.whatsapp, "Hola, quisiera más información."),
+    facebook: r.facebook || "",
+    instagram: r.instagram || "",
+    tiktok: r.tiktok || ""
+  };
+  document.querySelectorAll("[data-social]").forEach(a => {
+    const url = socialLinks[a.dataset.social];
+    if (url) {
+      a.href = url;
+      a.style.display = "";
+    } else {
+      a.style.display = "none";
+    }
+  });
+  const anySocial = Object.values(socialLinks).some(Boolean);
+  document.querySelectorAll("[data-social-icons]").forEach(wrap => {
+    wrap.style.display = anySocial ? "" : "none";
+  });
+
+  document.querySelectorAll("[data-feedback-link]").forEach(a => {
+    const url = r.feedbackUrl || toWhatsAppLink(r.whatsapp, "Hola, quiero dejar una sugerencia o un elogio para el restaurante.");
+    const wrap = a.closest("p");
+    if (url) {
+      a.href = url;
+      if (wrap) wrap.style.display = "";
+    } else if (wrap) {
+      wrap.style.display = "none";
+    }
+  });
+}
+
+function toWhatsAppLink(rawPhone, presetText) {
+  const digits = (rawPhone || "").replace(/\D/g, "");
+  if (!digits) return "";
+  const intl = digits.startsWith("0") ? "593" + digits.slice(1) : digits;
+  let url = "https://wa.me/" + intl;
+  if (presetText) url += "?text=" + encodeURIComponent(presetText);
+  return url;
 }
 
 /* ---------------- SERVICIOS ---------------- */

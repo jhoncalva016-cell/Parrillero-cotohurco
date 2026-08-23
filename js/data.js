@@ -36,6 +36,8 @@ const DEFAULT_DATA = {
     hoursNote: "Atendemos los 7 días de la semana",
     facebook: "",
     instagram: "",
+    tiktok: "",
+    feedbackUrl: "",
     reservationUrl: "",
     orderUrl: "",
     heroImage: "",
