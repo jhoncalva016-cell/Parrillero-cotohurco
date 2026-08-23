@@ -35,7 +35,11 @@ const DEFAULT_DATA = {
     hoursWeekday: "Lun–Jue 07:00–19:30 · Vie–Sáb 07:00–22:00 · Dom 07:00–16:00",
     hoursNote: "Atendemos los 7 días de la semana",
     facebook: "",
-    instagram: ""
+    instagram: "",
+    reservationUrl: "",
+    orderUrl: "",
+    heroImage: "",
+    heroVideo: ""
   },
 
   /* -------------------- SERVICIOS DEL LOCAL -------------------- */
@@ -209,6 +213,7 @@ const DEFAULT_DATA = {
       price: 0,
       stock: 0,
       unit: "porción",
+      image: "",
       active: false,
       updatedAt: ""
     },
@@ -220,6 +225,7 @@ const DEFAULT_DATA = {
       price: 0,
       stock: 0,
       unit: "porción",
+      image: "",
       active: false,
       updatedAt: ""
     },
@@ -231,6 +237,7 @@ const DEFAULT_DATA = {
       price: 0,
       stock: 0,
       unit: "unidad",
+      image: "",
       active: false,
       updatedAt: ""
     },
@@ -242,6 +249,7 @@ const DEFAULT_DATA = {
       price: 0,
       stock: 0,
       unit: "unidad",
+      image: "",
       active: false,
       updatedAt: ""
     },
@@ -253,6 +261,7 @@ const DEFAULT_DATA = {
       price: 0,
       stock: 0,
       unit: "unidad",
+      image: "",
       active: false,
       updatedAt: ""
     },
@@ -264,6 +273,7 @@ const DEFAULT_DATA = {
       price: 0,
       stock: 0,
       unit: "unidad",
+      image: "",
       active: false,
       updatedAt: ""
     }

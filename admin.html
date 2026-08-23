@@ -67,6 +67,16 @@
           <div class="form-field"><label>Nota de horario</label><input type="text" name="hoursNote"></div>
           <div class="form-field"><label>Facebook (URL)</label><input type="text" name="facebook"></div>
           <div class="form-field"><label>Instagram (URL)</label><input type="text" name="instagram"></div>
+          <div class="form-field"><label>Enlace de reservas</label><input type="text" name="reservationUrl" placeholder="Ej: https://wa.me/593998645322?text=Quiero%20reservar"></div>
+          <div class="form-field"><label>Enlace de pedidos a domicilio</label><input type="text" name="orderUrl" placeholder="Ej: https://wa.me/593998645322?text=Quiero%20pedir"></div>
+          <div class="form-field full">
+            <label>Imagen de fondo (portada / hero)</label>
+            <input type="text" name="heroImage" class="img-url-input" placeholder="Pega una URL de imagen o sube un archivo abajo">
+            <input type="file" accept="image/*" class="img-file-input" data-max-dim="1600" data-format="jpeg" data-quality="0.75">
+            <span class="img-field-hint">Se optimiza automáticamente al subirla. Si dejas también un video de fondo, el video tiene prioridad.</span>
+            <img class="img-preview">
+          </div>
+          <div class="form-field full"><label>Video de fondo (portada / hero) — URL directa a un archivo .mp4</label><input type="text" name="heroVideo" placeholder="https://.../video.mp4 (opcional, reemplaza la imagen de fondo)"></div>
           <div class="form-actions full">
             <button type="submit" class="btn btn-primary">Guardar información</button>
           </div>
@@ -83,6 +93,13 @@
           <div class="form-field"><label>Ícono (emoji)</label><input type="text" name="icon" placeholder="🍽️" required></div>
           <div class="form-field"><label>Título</label><input type="text" name="title" required></div>
           <div class="form-field full"><label>Descripción</label><textarea name="desc"></textarea></div>
+          <div class="form-field full">
+            <label>Imagen del ícono (opcional, reemplaza el emoji)</label>
+            <input type="text" name="iconImage" class="img-url-input" placeholder="Pega una URL de imagen o sube un archivo abajo">
+            <input type="file" accept="image/*" class="img-file-input" data-max-dim="200" data-format="png">
+            <span class="img-field-hint">Ideal para íconos con fondo transparente (PNG).</span>
+            <img class="img-preview">
+          </div>
           <div class="form-actions full">
             <button type="submit" class="btn btn-primary">Guardar servicio</button>
             <button type="button" class="btn btn-outline" id="svc-cancel">Cancelar edición</button>
@@ -114,6 +131,13 @@
           </div>
           <div class="form-field"><label>Estado</label>
             <select name="active"><option value="true">Activo (visible)</option><option value="false">Oculto</option></select>
+          </div>
+          <div class="form-field full">
+            <label>Foto del plato</label>
+            <input type="text" name="image" class="img-url-input" placeholder="Pega una URL de imagen o sube un archivo abajo">
+            <input type="file" accept="image/*" class="img-file-input" data-max-dim="1000" data-format="jpeg" data-quality="0.75">
+            <span class="img-field-hint">Se optimiza automáticamente al subirla.</span>
+            <img class="img-preview">
           </div>
           <div class="form-actions full">
             <button type="submit" class="btn btn-primary">Guardar plato</button>
@@ -161,6 +185,13 @@
           <div class="form-field"><label>Estado</label>
             <select name="active"><option value="true">Publicado hoy</option><option value="false">No publicar</option></select>
           </div>
+          <div class="form-field full">
+            <label>Foto del producto</label>
+            <input type="text" name="image" class="img-url-input" placeholder="Pega una URL de imagen o sube un archivo abajo">
+            <input type="file" accept="image/*" class="img-file-input" data-max-dim="1000" data-format="jpeg" data-quality="0.75">
+            <span class="img-field-hint">Se optimiza automáticamente al subirla.</span>
+            <img class="img-preview">
+          </div>
           <div class="form-actions full">
             <button type="submit" class="btn btn-primary">Guardar</button>
             <button type="button" class="btn btn-outline" id="daily-cancel">Cancelar edición</button>
@@ -188,6 +219,13 @@
           <div class="form-field"><label>Válido hasta</label><input type="date" name="endDate"></div>
           <div class="form-field"><label>Estado</label>
             <select name="active"><option value="true">Activa</option><option value="false">Inactiva</option></select>
+          </div>
+          <div class="form-field full">
+            <label>Imagen / infografía (promoción, evento o noticia)</label>
+            <input type="text" name="image" class="img-url-input" placeholder="Pega una URL de imagen o sube un archivo abajo">
+            <input type="file" accept="image/*" class="img-file-input" data-max-dim="1200" data-format="jpeg" data-quality="0.78">
+            <span class="img-field-hint">Se optimiza automáticamente al subirla. Sirve tanto para promociones como para eventos o noticias (usa la etiqueta para diferenciarlos).</span>
+            <img class="img-preview">
           </div>
           <div class="form-actions full">
             <button type="submit" class="btn btn-primary">Guardar promoción</button>

@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (isLoggedIn()) showApp();
 
   wireTabs();
+  wireImageFields();
   wireGeneralForm();
   wireServiceForm();
   wireMenuForm();
@@ -34,6 +35,108 @@ document.addEventListener("DOMContentLoaded", function () {
 
   renderAll();
 });
+
+/* ---------------- CAMPOS DE IMAGEN (URL o archivo subido) ----------------
+   Cada campo de imagen tiene: un input de texto ".img-url-input" (guarda la
+   URL o el data-URI final), un input de archivo ".img-file-input" opcional
+   y una vista previa "img.img-preview". Al elegir un archivo, se redimensiona
+   y comprime en el navegador (canvas) antes de guardarlo como data-URI, para
+   no llenar el almacenamiento local del navegador con fotos pesadas.
+------------------------------------------------------------------------- */
+function wireImageFields() {
+  document.addEventListener("change", e => {
+    if (!e.target.classList || !e.target.classList.contains("img-file-input")) return;
+    const fileInput = e.target;
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) return;
+    const field = fileInput.closest(".form-field");
+    if (!field) return;
+    const urlInput = field.querySelector(".img-url-input");
+    const preview = field.querySelector(".img-preview");
+    const maxDim = Number(fileInput.dataset.maxDim) || 900;
+    const format = fileInput.dataset.format === "png" ? "image/png" : "image/jpeg";
+    const quality = Number(fileInput.dataset.quality) || 0.75;
+
+    toast("Procesando imagen…");
+    resizeImageFile(file, maxDim, format, quality)
+      .then(dataUrl => {
+        if (urlInput) urlInput.value = dataUrl;
+        if (preview) { preview.src = dataUrl; preview.style.display = "block"; }
+        toast("Imagen lista. No olvides guardar el formulario.");
+      })
+      .catch(() => toast("No se pudo procesar esa imagen. Intenta con otro archivo."));
+  });
+
+  document.addEventListener("input", e => {
+    if (!e.target.classList || !e.target.classList.contains("img-url-input")) return;
+    const field = e.target.closest(".form-field");
+    if (!field) return;
+    const preview = field.querySelector(".img-preview");
+    if (!preview) return;
+    if (e.target.value) {
+      preview.src = e.target.value;
+      preview.style.display = "block";
+    } else {
+      preview.style.display = "none";
+      preview.src = "";
+    }
+  });
+}
+
+function resizeImageFile(file, maxDim, format, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error);
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("No se pudo leer la imagen."));
+      img.onload = () => {
+        let width = img.naturalWidth;
+        let height = img.naturalHeight;
+        if (width > maxDim || height > maxDim) {
+          if (width >= height) {
+            height = Math.round(height * (maxDim / width));
+            width = maxDim;
+          } else {
+            width = Math.round(width * (maxDim / height));
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        try {
+          resolve(canvas.toDataURL(format, quality));
+        } catch (err) {
+          reject(err);
+        }
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* Sincroniza las vistas previas de imagen de un formulario con el valor
+   actual de sus inputs ".img-url-input" (útil tras precargar un formulario
+   para editar, o tras resetearlo). */
+function refreshImagePreviews(form) {
+  if (!form) return;
+  form.querySelectorAll(".form-field").forEach(field => {
+    const urlInput = field.querySelector(".img-url-input");
+    const preview = field.querySelector(".img-preview");
+    if (!urlInput || !preview) return;
+    if (urlInput.value) {
+      preview.src = urlInput.value;
+      preview.style.display = "block";
+    } else {
+      preview.style.display = "none";
+      preview.src = "";
+    }
+  });
+}
 
 /* ---------------- AUTENTICACIÓN ---------------- */
 function getPass() { return localStorage.getItem(PASS_KEY) || DEFAULT_PASS; }
@@ -134,6 +237,7 @@ function fillGeneralForm(data) {
   Object.keys(data.restaurant).forEach(k => {
     if (form.elements[k]) form.elements[k].value = data.restaurant[k];
   });
+  refreshImagePreviews(form);
 }
 
 /* ================= SERVICIOS ================= */
@@ -145,6 +249,7 @@ function wireServiceForm() {
     if (!obj.id) delete obj.id;
     Store.upsertItem("services", obj);
     form.reset();
+    refreshImagePreviews(form);
     editing.servicio = null;
     document.getElementById("svc-form-title").textContent = "Agregar servicio";
     renderServiceTable(Store.getAll());
@@ -152,6 +257,7 @@ function wireServiceForm() {
   });
   document.getElementById("svc-cancel").addEventListener("click", () => {
     form.reset();
+    refreshImagePreviews(form);
     editing.servicio = null;
     document.getElementById("svc-form-title").textContent = "Agregar servicio";
   });
@@ -160,7 +266,7 @@ function renderServiceTable(data) {
   const body = document.getElementById("svc-table-body");
   body.innerHTML = data.services.map(s => `
     <tr>
-      <td style="font-size:1.3rem;">${s.icon}</td>
+      <td style="font-size:1.3rem;">${s.iconImage ? `<img src="${s.iconImage}" class="table-thumb-icon">` : s.icon}</td>
       <td>${s.title}</td>
       <td>${s.desc || ""}</td>
       <td class="row-actions">
@@ -177,6 +283,8 @@ function renderServiceTable(data) {
     form.elements.icon.value = item.icon;
     form.elements.title.value = item.title;
     form.elements.desc.value = item.desc;
+    form.elements.iconImage.value = item.iconImage || "";
+    refreshImagePreviews(form);
     document.getElementById("svc-form-title").textContent = "Editar servicio";
     document.querySelector('[data-tab="servicios"]').click();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -249,6 +357,7 @@ function wireMenuForm() {
     if (!obj.id) delete obj.id;
     Store.upsertItem("menu", obj);
     form.reset();
+    refreshImagePreviews(form);
     editing.menu = null;
     document.getElementById("menu-form-title").textContent = "Agregar plato a la carta";
     renderMenuTable(Store.getAll());
@@ -256,6 +365,7 @@ function wireMenuForm() {
   });
   document.getElementById("menu-cancel").addEventListener("click", () => {
     form.reset();
+    refreshImagePreviews(form);
     editing.menu = null;
     document.getElementById("menu-form-title").textContent = "Agregar plato a la carta";
   });
@@ -265,7 +375,7 @@ function renderMenuTable(data) {
   const catName = id => (data.categories.find(c => c.id === id) || {}).name || id;
   body.innerHTML = data.menu.map(m => `
     <tr>
-      <td>${m.name}${m.featured ? " ⭐" : ""}</td>
+      <td>${m.image ? `<img src="${m.image}" class="table-thumb">` : ""}${m.name}${m.featured ? " ⭐" : ""}</td>
       <td>${catName(m.category)}</td>
       <td>${money(m.priceLocal)}</td>
       <td>${money(Number(m.priceLocal) + 0.25)}</td>
@@ -287,6 +397,8 @@ function renderMenuTable(data) {
     form.elements.priceLocal.value = item.priceLocal;
     form.elements.featured.value = String(!!item.featured);
     form.elements.active.value = String(!!item.active);
+    form.elements.image.value = item.image || "";
+    refreshImagePreviews(form);
     document.getElementById("menu-form-title").textContent = "Editar plato";
     document.querySelector('[data-tab="carta"]').click();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -312,6 +424,7 @@ function wireDailyForm() {
     if (!obj.id) delete obj.id;
     Store.upsertItem("dailySpecials", obj);
     form.reset();
+    refreshImagePreviews(form);
     editing.daily = null;
     document.getElementById("daily-form-title").textContent = "Agregar / actualizar producto del día";
     renderDailyTable(Store.getAll());
@@ -319,6 +432,7 @@ function wireDailyForm() {
   });
   document.getElementById("daily-cancel").addEventListener("click", () => {
     form.reset();
+    refreshImagePreviews(form);
     editing.daily = null;
     document.getElementById("daily-form-title").textContent = "Agregar / actualizar producto del día";
   });
@@ -327,7 +441,7 @@ function renderDailyTable(data) {
   const body = document.getElementById("daily-table-body");
   body.innerHTML = data.dailySpecials.map(d => `
     <tr>
-      <td>${d.name}</td>
+      <td>${d.image ? `<img src="${d.image}" class="table-thumb">` : ""}${d.name}</td>
       <td>${d.subcategory}</td>
       <td>${d.price > 0 ? money(d.price) : "—"}</td>
       <td>${d.stock} ${d.unit || ""}</td>
@@ -351,6 +465,8 @@ function renderDailyTable(data) {
     form.elements.stock.value = item.stock;
     form.elements.unit.value = item.unit || "unidad";
     form.elements.active.value = String(!!item.active);
+    form.elements.image.value = item.image || "";
+    refreshImagePreviews(form);
     document.getElementById("daily-form-title").textContent = "Editar producto del día";
     document.querySelector('[data-tab="diario"]').click();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -373,6 +489,7 @@ function wirePromoForm() {
     if (!obj.id) delete obj.id;
     Store.upsertItem("promotions", obj);
     form.reset();
+    refreshImagePreviews(form);
     editing.promo = null;
     document.getElementById("promo-form-title").textContent = "Agregar promoción / lanzamiento de temporada";
     renderPromoTable(Store.getAll());
@@ -380,6 +497,7 @@ function wirePromoForm() {
   });
   document.getElementById("promo-cancel").addEventListener("click", () => {
     form.reset();
+    refreshImagePreviews(form);
     editing.promo = null;
     document.getElementById("promo-form-title").textContent = "Agregar promoción / lanzamiento de temporada";
   });
@@ -388,7 +506,7 @@ function renderPromoTable(data) {
   const body = document.getElementById("promo-table-body");
   body.innerHTML = data.promotions.map(p => `
     <tr>
-      <td>${p.title}</td>
+      <td>${p.image ? `<img src="${p.image}" class="table-thumb">` : ""}${p.title}</td>
       <td>${(p.startDate || "—")} a ${(p.endDate || "—")}</td>
       <td>${p.active ? '<span class="badge-active">Activa</span>' : '<span class="badge-inactive">Inactiva</span>'}</td>
       <td class="row-actions">
@@ -409,6 +527,8 @@ function renderPromoTable(data) {
     form.elements.startDate.value = item.startDate || "";
     form.elements.endDate.value = item.endDate || "";
     form.elements.active.value = String(!!item.active);
+    form.elements.image.value = item.image || "";
+    refreshImagePreviews(form);
     document.getElementById("promo-form-title").textContent = "Editar promoción";
     document.querySelector('[data-tab="promos"]').click();
     window.scrollTo({ top: 0, behavior: "smooth" });

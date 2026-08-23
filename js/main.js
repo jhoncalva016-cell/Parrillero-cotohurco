@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     renderFeaturedDishes(data, "#home-featured");
     renderPromotions(data, "#home-promos", true);
     renderDailySpecialsPreview(data, "#home-daily-preview");
+    renderHeroExtras(data);
   }
 
   if (page === "carta") {
@@ -124,15 +125,57 @@ function renderServices(data, targetSel) {
   });
 }
 
+/* ---------------- HERO (portada) ---------------- */
+function renderHeroExtras(data) {
+  const r = data.restaurant;
+  const hero = document.querySelector(".hero");
+  if (hero && (r.heroVideo || r.heroImage)) {
+    const overlay = el(`<div class="hero-bg-overlay"></div>`);
+    let media;
+    if (r.heroVideo) {
+      media = document.createElement("video");
+      media.className = "hero-bg-media";
+      media.autoplay = true;
+      media.muted = true;
+      media.loop = true;
+      media.playsInline = true;
+      const source = document.createElement("source");
+      source.src = r.heroVideo;
+      source.type = "video/mp4";
+      media.appendChild(source);
+    } else {
+      media = el(`<div class="hero-bg-media"></div>`);
+      media.style.backgroundImage = "url('" + r.heroImage + "')";
+      media.style.backgroundSize = "cover";
+      media.style.backgroundPosition = "center";
+    }
+    hero.insertBefore(overlay, hero.firstChild);
+    hero.insertBefore(media, hero.firstChild);
+  }
+
+  const actions = document.querySelector(".hero-actions");
+  if (actions) {
+    if (r.reservationUrl) {
+      actions.appendChild(el(`<a href="${r.reservationUrl}" target="_blank" rel="noopener" class="btn btn-outline-light">Reservar</a>`));
+    }
+    if (r.orderUrl) {
+      actions.appendChild(el(`<a href="${r.orderUrl}" target="_blank" rel="noopener" class="btn btn-gold">Pedir a domicilio</a>`));
+    }
+  }
+}
+
 /* ---------------- CARTA / PLATOS ---------------- */
 function dishCardHTML(item, opts) {
   opts = opts || {};
   const local = item.priceLocal;
   const llevar = (Number(local) + Number(0.25)).toFixed(2);
+  const media = item.image
+    ? `<div class="dish-media" style="background-image:url('${item.image}');background-size:cover;background-position:center;"></div>`
+    : `<div class="dish-media">🍢</div>`;
   return `
     <div class="dish-card" data-category="${item.category}">
       ${item.featured ? '<span class="dish-tag">Especialidad</span>' : ""}
-      <div class="dish-media">🍢</div>
+      ${media}
       <div class="dish-body">
         <h3>${item.name}</h3>
         <p>${item.description || ""}</p>
@@ -193,9 +236,12 @@ function stockBadgeHTML(item) {
 
 function dailyCardHTML(item) {
   const priced = item.price > 0;
+  const media = item.image
+    ? `<div class="dish-media" style="background-image:url('${item.image}');background-size:cover;background-position:center;"></div>`
+    : `<div class="dish-media">🌽</div>`;
   return `
     <div class="dish-card">
-      <div class="dish-media">🌽</div>
+      ${media}
       <div class="dish-body">
         ${stockBadgeHTML(item)}
         <h3>${item.name}</h3>
@@ -227,8 +273,12 @@ function renderDailySpecialsFull(data, targetSel) {
 
 /* ---------------- PROMOCIONES ---------------- */
 function promoCardHTML(p) {
+  const media = p.image
+    ? `<div class="promo-media" style="background-image:url('${p.image}')"></div>`
+    : "";
   return `
     <div class="promo-card">
+      ${media}
       <span class="badge">${p.badge || "Promoción"}</span>
       <h3>${p.title}</h3>
       <p>${p.description || ""}</p>
