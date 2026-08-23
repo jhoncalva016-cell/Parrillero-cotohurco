@@ -105,6 +105,15 @@ function renderFooterInfo(data) {
           : "#");
   });
 
+  applySocialLinks(data);
+}
+
+/* Aplica los enlaces de redes sociales y sugerencias/elogios a CUALQUIER
+   bloque presente en la página (footer, empty-state de promociones, etc.)
+   que use los atributos [data-social], [data-social-icons] y [data-feedback-link].
+   Se puede volver a llamar después de inyectar nuevo HTML dinámicamente. */
+function applySocialLinks(data) {
+  const r = data.restaurant;
   const socialLinks = {
     whatsapp: toWhatsAppLink(r.whatsapp, "Hola, quisiera más información."),
     facebook: r.facebook || "",
@@ -328,13 +337,32 @@ function promoCardHTML(p) {
   `;
 }
 
+function promoEmptyStateHTML() {
+  return `
+    <div class="empty-state empty-state-social">
+      <p>No hay promociones activas por el momento. ¡Síguenos para no perderte las próximas!</p>
+      <div class="social-icons social-icons--light" data-social-icons>
+        <a href="#" data-social="whatsapp" target="_blank" rel="noopener" title="WhatsApp"><img src="images/social-whatsapp.png" alt="WhatsApp"></a>
+        <a href="#" data-social="facebook" target="_blank" rel="noopener" title="Facebook"><img src="images/social-facebook.png" alt="Facebook"></a>
+        <a href="#" data-social="instagram" target="_blank" rel="noopener" title="Instagram"><img src="images/social-instagram.png" alt="Instagram"></a>
+        <a href="#" data-social="tiktok" target="_blank" rel="noopener" title="TikTok"><img src="images/social-tiktok.png" alt="TikTok"></a>
+      </div>
+      <p><a href="#" data-feedback-link target="_blank" rel="noopener" class="empty-state-feedback"><img src="images/icon-feedback.png" alt="" class="feedback-icon"> Sugerencias y elogios</a></p>
+    </div>
+  `;
+}
+
 function renderPromotions(data, targetSel, previewOnly) {
   const target = document.querySelector(targetSel);
   if (!target) return;
   let items = data.promotions.filter(p => p.active);
   if (previewOnly) items = items.slice(0, 3);
-  target.innerHTML = items.map(promoCardHTML).join("") ||
-    '<p class="empty-state">No hay promociones activas por el momento. ¡Síguenos para no perderte las próximas!</p>';
+  if (items.length) {
+    target.innerHTML = items.map(promoCardHTML).join("");
+  } else {
+    target.innerHTML = promoEmptyStateHTML();
+    applySocialLinks(data);
+  }
 }
 
 /* ---------------- DOMICILIOS ---------------- */

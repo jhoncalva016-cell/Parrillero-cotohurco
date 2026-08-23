@@ -536,6 +536,20 @@ p{margin:0 0 1rem;}
   background:rgba(0,0,0,0.03);
   border-radius:var(--radius);
 }
+.empty-state-social .social-icons{
+  justify-content:center;
+  margin:16px 0 10px;
+}
+.empty-state-social .empty-state-feedback{
+  font-size:.85rem;
+  font-weight:600;
+  color:var(--color-ember);
+  display:inline-flex;
+  align-items:center;
+}
+.empty-state-social .empty-state-feedback:hover{
+  color:var(--color-ember-dark);
+}
 
 /* ---------- DOMICILIOS / CALCULADORA ---------- */
 .delivery-box{
@@ -613,6 +627,13 @@ p{margin:0 0 1rem;}
   display:flex;
   gap:10px;
   margin:0 0 4px;
+}
+.social-icons--light a{
+  background:rgba(0,0,0,0.06);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+.social-icons--light a:hover{
+  box-shadow:0 4px 10px rgba(0,0,0,0.15);
 }
 .social-icons a{
   width:34px;
