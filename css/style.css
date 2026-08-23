@@ -664,6 +664,19 @@ p{margin:0 0 1rem;}
   transform:translateY(-2px);
   box-shadow:0 4px 10px rgba(0,0,0,0.35);
 }
+.phone-wa-icon{
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  object-fit:cover;
+  vertical-align:-2px;
+  margin-right:2px;
+}
+.phone-link-inline{
+  display:inline-flex;
+  align-items:center;
+  white-space:nowrap;
+}
 .feedback-icon{
   width:20px;
   height:20px;
