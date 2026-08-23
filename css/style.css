@@ -601,10 +601,18 @@ p{margin:0 0 1rem;}
 .footer-grid p, .footer-grid a{font-size:.88rem;color:rgba(247,236,217,0.75);}
 .footer-grid ul li{margin-bottom:8px;}
 .footer-grid a:hover{color:var(--color-gold);}
+.footer-grid .social-label{
+  font-family:var(--font-head);
+  font-size:.78rem;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+  color:var(--color-gold);
+  margin:14px 0 8px;
+}
 .social-icons{
   display:flex;
   gap:10px;
-  margin:10px 0 4px;
+  margin:0 0 4px;
 }
 .social-icons a{
   width:34px;
