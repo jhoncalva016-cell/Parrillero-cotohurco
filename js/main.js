@@ -276,7 +276,10 @@ function dishCardHTML(item, opts) {
     : `<div class="dish-media">🍢</div>`;
   return `
     <div class="dish-card" data-category="${item.category}">
-      ${item.featured ? '<span class="dish-tag">Especialidad</span>' : ""}
+      <div class="dish-corner">
+        <img src="images/logo.png" alt="" class="dish-brand-mark">
+        ${item.featured ? '<span class="dish-tag">Especialidad</span>' : ""}
+      </div>
       ${media}
       <div class="dish-body">
         <h3>${item.name}</h3>
