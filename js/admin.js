@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   wireTabs();
   wireImageFields();
+  wireGalleryFields();
   wireGeneralForm();
   wireServiceForm();
   wireMenuForm();
@@ -138,6 +139,81 @@ function refreshImagePreviews(form) {
   });
 }
 
+/* ---------------- GALERÍA DE FOTOS (varias imágenes por servicio) ----------------
+   Cada campo de galería tiene: un input oculto con name="gallery" que guarda un
+   array (como JSON) de data-URIs/URLs, una fila de miniaturas ".gallery-thumbs"
+   con botón de quitar por foto, y un input de archivo múltiple ".gallery-add-input"
+   que redimensiona/comprime cada foto elegida antes de agregarla al array.
+------------------------------------------------------------------------- */
+function wireGalleryFields() {
+  document.addEventListener("change", e => {
+    if (!e.target.classList || !e.target.classList.contains("gallery-add-input")) return;
+    const fileInput = e.target;
+    const files = Array.from(fileInput.files || []);
+    if (!files.length) return;
+    const manager = fileInput.closest(".gallery-manager");
+    if (!manager) return;
+    const hidden = manager.querySelector('input[type="hidden"]');
+    const maxDim = Number(fileInput.dataset.maxDim) || 1200;
+    const format = fileInput.dataset.format === "png" ? "image/png" : "image/jpeg";
+    const quality = Number(fileInput.dataset.quality) || 0.72;
+
+    toast("Procesando " + files.length + " imagen(es)…");
+    Promise.all(files.map(f => resizeImageFile(f, maxDim, format, quality)))
+      .then(dataUrls => {
+        const current = getGalleryArray(hidden);
+        setGalleryArray(hidden, current.concat(dataUrls));
+        renderGalleryThumbs(manager);
+        fileInput.value = "";
+        toast("Fotos agregadas. No olvides guardar el formulario.");
+      })
+      .catch(() => toast("No se pudieron procesar algunas imágenes."));
+  });
+
+  document.addEventListener("click", e => {
+    if (!e.target.classList || !e.target.classList.contains("gallery-remove")) return;
+    const manager = e.target.closest(".gallery-manager");
+    if (!manager) return;
+    const hidden = manager.querySelector('input[type="hidden"]');
+    const idx = Number(e.target.dataset.idx);
+    const current = getGalleryArray(hidden);
+    current.splice(idx, 1);
+    setGalleryArray(hidden, current);
+    renderGalleryThumbs(manager);
+  });
+}
+
+function getGalleryArray(hiddenInput) {
+  if (!hiddenInput || !hiddenInput.value) return [];
+  try {
+    const parsed = JSON.parse(hiddenInput.value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    return [];
+  }
+}
+function setGalleryArray(hiddenInput, arr) {
+  if (hiddenInput) hiddenInput.value = JSON.stringify(arr);
+}
+function renderGalleryThumbs(manager) {
+  const hidden = manager.querySelector('input[type="hidden"]');
+  const thumbs = manager.querySelector(".gallery-thumbs");
+  if (!thumbs) return;
+  const arr = getGalleryArray(hidden);
+  thumbs.innerHTML = arr.map((src, i) => `
+    <span class="gallery-thumb">
+      <img src="${src}">
+      <button type="button" class="gallery-remove" data-idx="${i}" title="Quitar foto">×</button>
+    </span>
+  `).join("") || `<span class="gallery-empty-hint">Sin fotos todavía.</span>`;
+}
+/* Sincroniza todas las galerías de un formulario con el valor actual de su
+   input oculto (tras precargar el formulario para editar, o tras resetearlo). */
+function refreshGalleryManagers(form) {
+  if (!form) return;
+  form.querySelectorAll(".gallery-manager").forEach(manager => renderGalleryThumbs(manager));
+}
+
 /* ---------------- AUTENTICACIÓN ---------------- */
 function getPass() { return localStorage.getItem(PASS_KEY) || DEFAULT_PASS; }
 function setPass(p) { localStorage.setItem(PASS_KEY, p); }
@@ -247,9 +323,11 @@ function wireServiceForm() {
     e.preventDefault();
     const obj = formToObject(form);
     if (!obj.id) delete obj.id;
+    obj.gallery = getGalleryArray({ value: obj.gallery });
     Store.upsertItem("services", obj);
     form.reset();
     refreshImagePreviews(form);
+    refreshGalleryManagers(form);
     editing.servicio = null;
     document.getElementById("svc-form-title").textContent = "Agregar servicio";
     renderServiceTable(Store.getAll());
@@ -258,6 +336,7 @@ function wireServiceForm() {
   document.getElementById("svc-cancel").addEventListener("click", () => {
     form.reset();
     refreshImagePreviews(form);
+    refreshGalleryManagers(form);
     editing.servicio = null;
     document.getElementById("svc-form-title").textContent = "Agregar servicio";
   });
@@ -284,7 +363,10 @@ function renderServiceTable(data) {
     form.elements.title.value = item.title;
     form.elements.desc.value = item.desc;
     form.elements.iconImage.value = item.iconImage || "";
+    form.elements.detailImage.value = item.detailImage || "";
+    form.elements.gallery.value = JSON.stringify(item.gallery || []);
     refreshImagePreviews(form);
+    refreshGalleryManagers(form);
     document.getElementById("svc-form-title").textContent = "Editar servicio";
     document.querySelector('[data-tab="servicios"]').click();
     window.scrollTo({ top: 0, behavior: "smooth" });

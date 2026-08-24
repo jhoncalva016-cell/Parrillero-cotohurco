@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (page === "servicios") {
     renderServices(data, "#services-grid-full");
+    renderServiceDetails(data);
   }
 
   if (page === "domicilios") {
@@ -170,15 +171,61 @@ function renderServices(data, targetSel) {
     const iconHTML = s.iconImage
       ? `<img class="icon-img" src="${s.iconImage}" alt="${s.title}">`
       : `<span class="icon">${s.icon}</span>`;
+    const tag = s.link ? "a" : "div";
+    const openAttrs = s.link ? ` href="${s.link}"` : "";
+    const moreHint = s.link ? `<span class="service-card-more">Ver más →</span>` : "";
     target.appendChild(el(`
-      <div class="service-card">
+      <${tag}${openAttrs} class="service-card${s.link ? " is-link" : ""}">
         ${iconHTML}
         <h3>${s.title}</h3>
         <p>${s.desc}</p>
-      </div>
+        ${moreHint}
+      </${tag}>
     `));
   });
 }
+
+/* Secciones ampliadas para servicios con más contenido (fotos, croquis) —
+   solo se renderizan en servicios.html, dentro de #service-details. */
+function renderServiceDetails(data) {
+  const target = document.querySelector("#service-details");
+  if (!target) return;
+  const items = data.services.filter(s => s.hasDetail);
+  target.innerHTML = items.map(serviceDetailHTML).join("");
+}
+
+function serviceDetailHTML(s) {
+  const anchorId = "svc-detail-" + s.id;
+  let body;
+  if (s.gallery && s.gallery.length) {
+    body = `<div class="service-detail-gallery">` +
+      s.gallery.map(src => `<div class="service-detail-photo" style="background-image:url('${src}')"></div>`).join("") +
+      `</div>`;
+  } else if (s.detailImage) {
+    body = `<div class="service-detail-image" style="background-image:url('${s.detailImage}')"></div>`;
+  } else {
+    body = `<p class="empty-state">Aún no se han agregado fotos de "${s.title}". Se pueden subir desde el Panel Admin.</p>`;
+  }
+  return `
+    <div class="service-detail-section" id="${anchorId}">
+      <h3>${s.title}</h3>
+      ${body}
+    </div>
+  `;
+}
+
+/* Lightbox simple: click en una foto de la galería de servicios la muestra
+   ampliada; click de nuevo (en cualquier parte del overlay) la cierra. */
+document.addEventListener("click", e => {
+  const photo = e.target.closest(".service-detail-photo");
+  if (!photo) return;
+  const match = /url\((['"]?)(.*?)\1\)/.exec(photo.style.backgroundImage || "");
+  const src = match ? match[2] : "";
+  if (!src) return;
+  const overlay = el(`<div class="lightbox-overlay"><img class="lightbox-img" src="${src}" alt=""></div>`);
+  document.body.appendChild(overlay);
+  overlay.addEventListener("click", () => overlay.remove());
+});
 
 /* ---------------- HERO (portada) ---------------- */
 function renderHeroExtras(data) {

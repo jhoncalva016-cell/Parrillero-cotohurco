@@ -56,33 +56,41 @@ const DEFAULT_DATA = {
       id: "svc-2",
       icon: "🥡",
       title: "Para llevar",
-      desc: "Pide tu plato favorito para llevar. Se añade un cargo mínimo de empaque de $0.25."
+      desc: "Pide tu plato favorito para llevar. Se añade un cargo mínimo de empaque de $0.25.",
+      link: "domicilios.html#empaque"
     },
     {
       id: "svc-3",
       icon: "🛵",
       title: "Servicio a domicilio",
-      desc: "Entregamos tu pedido a domicilio. El costo varía según distancia y número de platos (desde $1.00)."
+      desc: "Entregamos tu pedido a domicilio. El costo varía según distancia y número de platos (desde $1.00).",
+      link: "domicilios.html#calculadora"
     },
     {
       id: "svc-4",
       icon: "🅿️",
       iconImage: "images/icon-parking.png",
       title: "Parqueadero",
-      desc: "Espacio disponible para que dejes tu vehículo mientras disfrutas de tu comida."
+      desc: "Espacio disponible para que dejes tu vehículo mientras disfrutas de tu comida.",
+      link: "servicios.html#svc-detail-svc-4",
+      hasDetail: true,
+      detailImage: ""
     },
     {
       id: "svc-5",
       icon: "🎉",
       title: "Reuniones y eventos",
-      desc: "Espacio ideal para reuniones familiares, cumpleaños y encuentros con amigos."
+      desc: "Espacio ideal para reuniones familiares, cumpleaños y encuentros con amigos.",
+      link: "servicios.html#svc-detail-svc-5",
+      hasDetail: true,
+      gallery: []
     },
     {
       id: "svc-6",
       icon: "📶",
       iconImage: "images/icon-wifi.png",
       title: "WiFi gratis",
-      desc: "Conexión a internet disponible para nuestros comensales."
+      desc: "Conéctate a la red <strong>CNT_ELCOTURCO-5G</strong> con la clave <strong>PARRILLERO2008</strong> y disfruta conectado."
     }
   ],
 

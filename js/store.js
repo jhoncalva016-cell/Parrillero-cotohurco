@@ -66,7 +66,10 @@ const Store = (function () {
     const list = data[collectionName];
     const idx = list.findIndex(x => x.id === item.id);
     if (idx >= 0) {
-      list[idx] = item;
+      // Fusiona en vez de reemplazar por completo: así un campo que no
+      // viene en el formulario (por ejemplo "link" o "hasDetail", que no
+      // son editables desde el Panel Admin) no se pierde al guardar.
+      list[idx] = Object.assign({}, list[idx], item);
     } else {
       item.id = item.id || uid(collectionName.slice(0, 4));
       list.push(item);
