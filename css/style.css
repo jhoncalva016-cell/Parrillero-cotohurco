@@ -255,11 +255,23 @@ p{margin:0 0 1rem;}
 .hero{
   position:relative;
   background:
-    linear-gradient(120deg, rgba(27,21,18,0.88), rgba(27,21,18,0.55)),
-    repeating-linear-gradient(45deg, #241a14, #241a14 12px, #2b2019 12px, #2b2019 24px);
+    radial-gradient(1100px 650px at 12% 18%, rgba(232,161,60,0.38), transparent 60%),
+    radial-gradient(900px 550px at 88% 82%, rgba(196,58,26,0.42), transparent 60%),
+    radial-gradient(650px 500px at 60% -5%, rgba(255,205,130,0.16), transparent 55%),
+    linear-gradient(135deg, #1b1512 0%, #241a14 45%, #2b1c14 100%);
+  background-size:180% 180%, 180% 180%, 160% 160%, 100% 100%;
+  background-position:0% 0%, 100% 100%, 50% 0%, 0 0;
+  animation:heroGlow 22s ease-in-out infinite;
   color:var(--color-cream);
   padding:100px 0 110px;
   overflow:hidden;
+}
+@keyframes heroGlow{
+  0%, 100%{ background-position:0% 0%, 100% 100%, 50% 0%, 0 0; }
+  50%{ background-position:25% 30%, 75% 65%, 60% 15%, 0 0; }
+}
+@media (prefers-reduced-motion: reduce){
+  .hero{ animation:none; }
 }
 .hero-bg-media{
   position:absolute;
@@ -327,32 +339,46 @@ p{margin:0 0 1rem;}
   transform:translateY(-2px);
 }
 .hero-visual{
-  background:linear-gradient(160deg, var(--color-ember), var(--color-wood));
-  border-radius:24px;
+  background:none;
   min-height:340px;
   display:flex;
   align-items:center;
   justify-content:center;
   font-size:5rem;
-  box-shadow:var(--shadow-strong);
   position:relative;
+  padding-left:8%;
+}
+.hero-visual::before{
+  content:"";
+  position:absolute;
+  width:78%;
+  aspect-ratio:1/1;
+  max-width:320px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(232,161,60,0.32), rgba(196,58,26,0.16) 55%, transparent 72%);
+  filter:blur(6px);
+  z-index:0;
 }
 .hero-visual::after{
   content:"🔥";
   position:absolute;
-  bottom:-18px;right:-10px;
-  font-size:3rem;
+  bottom:6%;right:6%;
+  font-size:2.4rem;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+  z-index:2;
 }
 .hero-logo{
-  width:78%;
-  max-width:260px;
-  filter:drop-shadow(0 12px 20px rgba(0,0,0,0.35));
+  width:88%;
+  max-width:300px;
+  position:relative;
+  z-index:1;
+  filter:drop-shadow(0 14px 24px rgba(0,0,0,0.45));
 }
 @media (max-width:900px){
   .hero .container{grid-template-columns:1fr;}
   .hero h1{font-size:2.3rem;}
   .hero{padding:70px 0 80px;}
-  .hero-visual{min-height:220px;}
+  .hero-visual{min-height:220px; padding-left:0;}
 }
 
 /* ---------- SERVICIOS ---------- */
