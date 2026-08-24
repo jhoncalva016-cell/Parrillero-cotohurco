@@ -33,10 +33,49 @@ const Store = (function () {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
 
+  /* Rellena en los datos YA GUARDADOS del navegador cualquier campo nuevo
+     que el código haya incorporado después de que ese navegador guardó
+     su copia (por ejemplo "link"/"hasDetail"/"gallery" en servicios, o un
+     campo nuevo en "restaurant"). Nunca toca ni sobreescribe una clave que
+     ya exista (aunque esté vacía) — solo agrega las que faltan por
+     completo, así que ninguna personalización hecha desde el Panel Admin
+     se pierde. Sin esto, un navegador que ya tenía datos guardados antes
+     de una actualización del sitio se queda "atascado" sin ver las
+     funciones nuevas hasta borrar el almacenamiento local. */
+  function _reconcileWithDefaults(data) {
+    let changed = false;
+
+    Object.keys(DEFAULT_DATA.restaurant).forEach(k => {
+      if (data.restaurant && !(k in data.restaurant)) {
+        data.restaurant[k] = DEFAULT_DATA.restaurant[k];
+        changed = true;
+      }
+    });
+
+    ["services", "menu", "dailySpecials", "promotions", "categories"].forEach(collection => {
+      if (!Array.isArray(data[collection])) return;
+      const defaults = DEFAULT_DATA[collection] || [];
+      data[collection].forEach(item => {
+        const def = defaults.find(d => d.id === item.id);
+        if (!def) return;
+        Object.keys(def).forEach(k => {
+          if (!(k in item)) {
+            item[k] = Array.isArray(def[k]) ? def[k].slice() : def[k];
+            changed = true;
+          }
+        });
+      });
+    });
+
+    return changed;
+  }
+
   function init() {
     let data = _load();
     if (!data) {
       data = JSON.parse(JSON.stringify(DEFAULT_DATA));
+      _save(data);
+    } else if (_reconcileWithDefaults(data)) {
       _save(data);
     }
     return data;
