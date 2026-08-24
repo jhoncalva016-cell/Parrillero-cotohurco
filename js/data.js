@@ -40,7 +40,7 @@ const DEFAULT_DATA = {
     feedbackUrl: "",
     reservationUrl: "",
     orderUrl: "",
-    heroImage: "",
+    heroImage: "images/hero-bg.jpg",
     heroVideo: ""
   },
 
