@@ -43,8 +43,16 @@ const DEFAULT_DATA = {
     orderUrl: "",
     heroImage: "images/hero-bg.jpg",
     heroVideo: "",
-    pageHeroImage: "",
-    pageHeroVideo: ""
+    pageHeroImage_carta: "",
+    pageHeroVideo_carta: "",
+    pageHeroImage_desayunos: "",
+    pageHeroVideo_desayunos: "",
+    pageHeroImage_domicilios: "images/page-bg-promo.jpg",
+    pageHeroVideo_domicilios: "",
+    pageHeroImage_promociones: "",
+    pageHeroVideo_promociones: "",
+    pageHeroImage_servicios: "",
+    pageHeroVideo_servicios: ""
   },
 
   /* -------------------- SERVICIOS DEL LOCAL -------------------- */

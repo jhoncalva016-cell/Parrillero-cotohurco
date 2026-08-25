@@ -235,37 +235,44 @@ document.addEventListener("click", e => {
 });
 
 /* ---------------- HERO (portada) ---------------- */
-/* Fondo animado (imagen o video, "live wallpaper") para el encabezado
-   de las páginas interiores (.page-hero): La Carta, Desayunos, Noticias,
-   Servicios y Domicilios. Editable desde el Panel Admin → General. Si no
-   se configura nada, el degradado ámbar animado definido en CSS ya le da
-   vida al encabezado por defecto. */
+/* Fondo animado (imagen, video o degradado, "live wallpaper") para TODA
+   la página en las páginas interiores (las que tienen .page-hero: La
+   Carta, Desayunos, Noticias, Servicios y Domicilios). Se fija detrás de
+   todo el contenido (position:fixed) para que las tarjetas (calculadora,
+   platos, servicios, etc.) queden "flotando" encima. Cada página tiene su
+   PROPIO fondo, independiente de las demás — editable por separado desde
+   el Panel Admin → General. Si una página no tiene imagen ni video propio,
+   se usa el degradado ámbar animado por defecto. */
 function renderPageHeroExtras(data) {
   const r = data.restaurant;
   const hero = document.querySelector(".page-hero");
-  if (!hero || !(r.pageHeroVideo || r.pageHeroImage)) return;
+  if (!hero) return; // solo páginas interiores
 
-  const overlay = el(`<div class="page-hero-bg-overlay"></div>`);
+  const page = document.body.dataset.page; // carta | desayunos | domicilios | promociones | servicios
+  const pageVideo = r["pageHeroVideo_" + page] || "";
+  const pageImage = r["pageHeroImage_" + page] || "";
+
+  const overlay = el(`<div class="page-bg-overlay"></div>`);
   let media;
-  if (r.pageHeroVideo) {
+  if (pageVideo) {
     media = document.createElement("video");
-    media.className = "page-hero-bg-media";
+    media.className = "page-bg-media";
     media.autoplay = true;
     media.muted = true;
     media.loop = true;
     media.playsInline = true;
     const source = document.createElement("source");
-    source.src = r.pageHeroVideo;
+    source.src = pageVideo;
     source.type = "video/mp4";
     media.appendChild(source);
+  } else if (pageImage) {
+    media = el(`<div class="page-bg-media"></div>`);
+    media.style.backgroundImage = "url('" + pageImage + "')";
   } else {
-    media = el(`<div class="page-hero-bg-media"></div>`);
-    media.style.backgroundImage = "url('" + r.pageHeroImage + "')";
-    media.style.backgroundSize = "cover";
-    media.style.backgroundPosition = "center";
+    media = el(`<div class="page-bg-media page-bg-gradient"></div>`);
   }
-  hero.insertBefore(overlay, hero.firstChild);
-  hero.insertBefore(media, hero.firstChild);
+  document.body.insertBefore(overlay, document.body.firstChild);
+  document.body.insertBefore(media, document.body.firstChild);
 }
 
 function renderHeroExtras(data) {
