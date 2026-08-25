@@ -74,6 +74,7 @@ function renderFooterInfo(data) {
     "[data-footer-address]": r.address ? ("Quito, Ecuador (UIO) – " + r.address) : "",
     "[data-footer-phone]": r.phone,
     "[data-footer-phone2]": r.phoneLandline,
+    "[data-footer-email]": r.email,
     "[data-footer-hours]": r.hoursWeekday,
     "[data-footer-hours-note]": r.hoursNote
   };
@@ -99,6 +100,11 @@ function renderFooterInfo(data) {
   document.querySelectorAll("[data-phone2-link]").forEach(a => {
     a.href = toTelHref(r.phoneLandline);
     a.style.display = r.phoneLandline ? "" : "none";
+  });
+  document.querySelectorAll("[data-email-link]").forEach(a => {
+    a.href = r.email ? ("mailto:" + r.email) : "#";
+    const wrap = a.closest("p");
+    if (wrap) wrap.style.display = r.email ? "" : "none";
   });
   document.querySelectorAll("[data-map-link]").forEach(a => {
     a.href = r.mapsUrl

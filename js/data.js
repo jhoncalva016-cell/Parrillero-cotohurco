@@ -32,6 +32,7 @@ const DEFAULT_DATA = {
     phone: "0998645322",
     phoneLandline: "02 2779953",
     whatsapp: "0998645322",
+    email: "franciscocalva@hotmail.com",
     hoursWeekday: "Lun–Jue 07:00–19:30 · Vie–Sáb 07:00–22:00 · Dom 07:00–16:00",
     hoursNote: "Horario de atención",
     facebook: "",
