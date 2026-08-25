@@ -84,6 +84,14 @@
             <img class="img-preview">
           </div>
           <div class="form-field full"><label>Video de fondo (portada / hero) — URL directa a un archivo .mp4</label><input type="text" name="heroVideo" placeholder="https://.../video.mp4 (opcional, reemplaza la imagen de fondo)"></div>
+          <div class="form-field full">
+            <label>Imagen de fondo (encabezado de páginas interiores)</label>
+            <input type="text" name="pageHeroImage" class="img-url-input" placeholder="Pega una URL de imagen o sube un archivo abajo">
+            <input type="file" accept="image/*" class="img-file-input" data-max-dim="1600" data-format="jpeg" data-quality="0.75">
+            <span class="img-field-hint">Se usa como fondo del encabezado en La Carta, Desayunos, Noticias, Servicios y Domicilios. Se optimiza automáticamente al subirla. Si dejas también un video, el video tiene prioridad.</span>
+            <img class="img-preview">
+          </div>
+          <div class="form-field full"><label>Video de fondo (encabezado de páginas interiores) — URL directa a un archivo .mp4</label><input type="text" name="pageHeroVideo" placeholder="https://.../video.mp4 (opcional, reemplaza la imagen de fondo)"></div>
           <div class="form-actions full">
             <button type="submit" class="btn btn-primary">Guardar información</button>
           </div>
