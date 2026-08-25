@@ -169,6 +169,14 @@
             <input type="file" accept="image/*" multiple class="gallery-add-input" data-max-dim="1200" data-format="jpeg" data-quality="0.72">
             <span class="img-field-hint">Puedes elegir varias fotos a la vez. Usa fotos livianas: el navegador tiene un límite de almacenamiento.</span>
           </div>
+          <div class="form-field full">
+            <label>Código QR (opcional) — se muestra dentro de la tarjeta, ideal para "WiFi gratis"</label>
+            <input type="text" name="qrImage" class="img-url-input" placeholder="Pega una URL de imagen o sube un archivo abajo">
+            <input type="file" accept="image/*" class="img-file-input" data-max-dim="600" data-format="png">
+            <span class="img-field-hint">Si cambias la red o la clave del WiFi, avísame y te genero un QR nuevo para subir aquí (o usa cualquier generador de "QR de WiFi" en línea).</span>
+            <img class="img-preview">
+          </div>
+          <div class="form-field full"><label>Texto bajo el QR (opcional)</label><input type="text" name="qrCaption" placeholder="Ej: Escanéalo con la cámara de tu celular para conectarte."></div>
           <div class="form-actions full">
             <button type="submit" class="btn btn-primary">Guardar servicio</button>
             <button type="button" class="btn btn-outline" id="svc-cancel">Cancelar edición</button>
