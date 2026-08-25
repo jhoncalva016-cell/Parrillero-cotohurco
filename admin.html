@@ -177,6 +177,13 @@
             <img class="img-preview">
           </div>
           <div class="form-field full"><label>Texto bajo el QR (opcional)</label><input type="text" name="qrCaption" placeholder="Ej: Escanéalo con la cámara de tu celular para conectarte."></div>
+          <div class="form-field full">
+            <label>Enlace de "intento de conexión directa" (opcional) — botón extra debajo del QR</label>
+            <input type="text" name="directLinkUrl" placeholder="Ej: WIFI:T:WPA;S:NOMBRE_RED;P:CLAVE;;">
+            <span class="img-field-hint">No hay forma 100% confiable de que una página web conecte el celular solo — este enlace funciona en algunos Android como intento extra, nunca en iPhone. El QR de arriba sigue siendo el método que funciona siempre.</span>
+          </div>
+          <div class="form-field"><label>Texto del botón</label><input type="text" name="directLinkLabel" placeholder="Ej: 📶 Intentar conectar directo"></div>
+          <div class="form-field full"><label>Nota bajo el botón (opcional)</label><input type="text" name="directLinkNote" placeholder="Ej: Funciona en algunos Android. Si no pasa nada, usa el QR de arriba."></div>
           <div class="form-actions full">
             <button type="submit" class="btn btn-primary">Guardar servicio</button>
             <button type="button" class="btn btn-outline" id="svc-cancel">Cancelar edición</button>
