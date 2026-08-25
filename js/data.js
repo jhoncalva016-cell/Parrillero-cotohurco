@@ -42,7 +42,9 @@ const DEFAULT_DATA = {
     reservationUrl: "",
     orderUrl: "",
     heroImage: "images/hero-bg.jpg",
-    heroVideo: ""
+    heroVideo: "",
+    pageHeroImage: "",
+    pageHeroVideo: ""
   },
 
   /* -------------------- SERVICIOS DEL LOCAL -------------------- */
