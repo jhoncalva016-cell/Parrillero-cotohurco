@@ -84,14 +84,54 @@
             <img class="img-preview">
           </div>
           <div class="form-field full"><label>Video de fondo (portada / hero) — URL directa a un archivo .mp4</label><input type="text" name="heroVideo" placeholder="https://.../video.mp4 (opcional, reemplaza la imagen de fondo)"></div>
+          <div class="form-field full" style="margin-top:.5rem;">
+            <label style="font-size:.95rem;">Fondos de páginas interiores</label>
+            <span class="img-field-hint">Cada página interior tiene su propio fondo, independiente de las demás. Si dejas una en blanco, esa página usa el degradado ámbar animado por defecto.</span>
+          </div>
           <div class="form-field full">
-            <label>Imagen de fondo (encabezado de páginas interiores)</label>
-            <input type="text" name="pageHeroImage" class="img-url-input" placeholder="Pega una URL de imagen o sube un archivo abajo">
+            <label>Imagen de fondo — La Carta</label>
+            <input type="text" name="pageHeroImage_carta" class="img-url-input" placeholder="Pega una URL de imagen o sube un archivo abajo">
             <input type="file" accept="image/*" class="img-file-input" data-max-dim="1600" data-format="jpeg" data-quality="0.75">
-            <span class="img-field-hint">Se usa como fondo del encabezado en La Carta, Desayunos, Noticias, Servicios y Domicilios. Se optimiza automáticamente al subirla. Si dejas también un video, el video tiene prioridad.</span>
+            <span class="img-field-hint">Se optimiza automáticamente al subirla. Si dejas también un video, el video tiene prioridad.</span>
             <img class="img-preview">
           </div>
-          <div class="form-field full"><label>Video de fondo (encabezado de páginas interiores) — URL directa a un archivo .mp4</label><input type="text" name="pageHeroVideo" placeholder="https://.../video.mp4 (opcional, reemplaza la imagen de fondo)"></div>
+          <div class="form-field full"><label>Video de fondo — La Carta — URL directa a un archivo .mp4</label><input type="text" name="pageHeroVideo_carta" placeholder="https://.../video.mp4 (opcional, reemplaza la imagen)"></div>
+
+          <div class="form-field full">
+            <label>Imagen de fondo — Desayunos, Almuerzos y repostería tradicional</label>
+            <input type="text" name="pageHeroImage_desayunos" class="img-url-input" placeholder="Pega una URL de imagen o sube un archivo abajo">
+            <input type="file" accept="image/*" class="img-file-input" data-max-dim="1600" data-format="jpeg" data-quality="0.75">
+            <span class="img-field-hint">Se optimiza automáticamente al subirla. Si dejas también un video, el video tiene prioridad.</span>
+            <img class="img-preview">
+          </div>
+          <div class="form-field full"><label>Video de fondo — Desayunos... — URL directa a un archivo .mp4</label><input type="text" name="pageHeroVideo_desayunos" placeholder="https://.../video.mp4 (opcional, reemplaza la imagen)"></div>
+
+          <div class="form-field full">
+            <label>Imagen de fondo — Noticias</label>
+            <input type="text" name="pageHeroImage_promociones" class="img-url-input" placeholder="Pega una URL de imagen o sube un archivo abajo">
+            <input type="file" accept="image/*" class="img-file-input" data-max-dim="1600" data-format="jpeg" data-quality="0.75">
+            <span class="img-field-hint">Se optimiza automáticamente al subirla. Si dejas también un video, el video tiene prioridad.</span>
+            <img class="img-preview">
+          </div>
+          <div class="form-field full"><label>Video de fondo — Noticias — URL directa a un archivo .mp4</label><input type="text" name="pageHeroVideo_promociones" placeholder="https://.../video.mp4 (opcional, reemplaza la imagen)"></div>
+
+          <div class="form-field full">
+            <label>Imagen de fondo — Servicios</label>
+            <input type="text" name="pageHeroImage_servicios" class="img-url-input" placeholder="Pega una URL de imagen o sube un archivo abajo">
+            <input type="file" accept="image/*" class="img-file-input" data-max-dim="1600" data-format="jpeg" data-quality="0.75">
+            <span class="img-field-hint">Se optimiza automáticamente al subirla. Si dejas también un video, el video tiene prioridad.</span>
+            <img class="img-preview">
+          </div>
+          <div class="form-field full"><label>Video de fondo — Servicios — URL directa a un archivo .mp4</label><input type="text" name="pageHeroVideo_servicios" placeholder="https://.../video.mp4 (opcional, reemplaza la imagen)"></div>
+
+          <div class="form-field full">
+            <label>Imagen de fondo — Domicilios</label>
+            <input type="text" name="pageHeroImage_domicilios" class="img-url-input" placeholder="Pega una URL de imagen o sube un archivo abajo">
+            <input type="file" accept="image/*" class="img-file-input" data-max-dim="1600" data-format="jpeg" data-quality="0.75">
+            <span class="img-field-hint">Se optimiza automáticamente al subirla. Si dejas también un video, el video tiene prioridad.</span>
+            <img class="img-preview">
+          </div>
+          <div class="form-field full"><label>Video de fondo — Domicilios — URL directa a un archivo .mp4</label><input type="text" name="pageHeroVideo_domicilios" placeholder="https://.../video.mp4 (opcional, reemplaza la imagen)"></div>
           <div class="form-actions full">
             <button type="submit" class="btn btn-primary">Guardar información</button>
           </div>
