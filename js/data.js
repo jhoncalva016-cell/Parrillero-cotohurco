@@ -103,7 +103,10 @@ const DEFAULT_DATA = {
       title: "WiFi gratis",
       desc: "Conéctate a la red <strong>CNT_ELCOTURCO-5G</strong> con la clave <strong>PARRILLERO2008</strong> y disfruta conectado.",
       qrImage: "images/wifi-qr.png",
-      qrCaption: "Escanéalo con la cámara de tu celular y te conectas al toque, sin escribir nada."
+      qrCaption: "Escanéalo con la cámara de tu celular y te conectas al toque, sin escribir nada.",
+      directLinkUrl: "WIFI:T:WPA;S:CNT_ELCOTURCO-5G;P:PARRILLERO2008;;",
+      directLinkLabel: "📶 Intentar conectar directo",
+      directLinkNote: "Funciona en algunos celulares Android. Si no pasa nada al tocarlo, usa el código QR de arriba (ese sí funciona en todos)."
     }
   ],
 

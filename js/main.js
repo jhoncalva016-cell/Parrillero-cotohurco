@@ -181,10 +181,14 @@ function renderServices(data, targetSel) {
     const tag = s.link ? "a" : "div";
     const openAttrs = s.link ? ` href="${s.link}"` : "";
     const moreHint = s.link ? `<span class="service-card-more">Ver más →</span>` : "";
+    const directLinkHTML = s.directLinkUrl ? `
+          <a class="service-direct-link" href="${s.directLinkUrl}">${s.directLinkLabel || "Intentar conectar directo"}</a>
+          ${s.directLinkNote ? `<span class="service-direct-note">${s.directLinkNote}</span>` : ""}` : "";
     const qrHTML = s.qrImage ? `
         <div class="service-qr-box">
           <img class="service-qr-img" src="${s.qrImage}" alt="Código QR para conectarte a ${s.title}">
           <span class="service-qr-caption">${s.qrCaption || "Escanéalo con la cámara de tu celular para conectarte."}</span>
+          ${directLinkHTML}
         </div>` : "";
     target.appendChild(el(`
       <${tag}${openAttrs} class="service-card${s.link ? " is-link" : ""}${s.qrImage ? " has-qr" : ""}">
