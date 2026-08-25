@@ -148,7 +148,7 @@ function applySocialLinks(data) {
   // El buzón de "Sugerencias y elogios" queda sincronizado con Facebook;
   // si aún no hay Facebook configurado, usa feedbackUrl y luego WhatsApp de respaldo.
   document.querySelectorAll("[data-feedback-link]").forEach(a => {
-    const url = r.facebook || r.feedbackUrl || toWhatsAppLink(r.whatsapp, "Hola, quiero dejar una sugerencia o un elogio para el restaurante.");
+    const url = r.feedbackUrl || r.facebook || toWhatsAppLink(r.whatsapp, "Hola, quiero dejar una sugerencia o un elogio para el restaurante.");
     const wrap = a.closest("p");
     if (url) {
       a.href = url;

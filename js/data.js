@@ -38,7 +38,7 @@ const DEFAULT_DATA = {
     facebook: "",
     instagram: "",
     tiktok: "",
-    feedbackUrl: "",
+    feedbackUrl: "https://www.facebook.com/Elcotohurco/reviews/?id=1000635338905137&sk=reviews",
     reservationUrl: "",
     orderUrl: "",
     heroImage: "images/hero-bg.jpg",
