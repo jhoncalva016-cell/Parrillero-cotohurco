@@ -451,6 +451,29 @@ p{margin:0 0 1rem;}
   line-height:1.35;
   color:var(--color-text-soft);
 }
+.service-direct-link{
+  display:inline-block;
+  margin-top:6px;
+  padding:9px 16px;
+  border-radius:999px;
+  background:var(--color-ember);
+  color:#fff;
+  font-family:var(--font-head);
+  font-size:.78rem;
+  letter-spacing:.3px;
+  text-transform:uppercase;
+  text-decoration:none;
+  transition:background .15s ease, transform .15s ease;
+}
+.service-direct-link:hover{background:var(--color-gold);transform:translateY(-1px);}
+.service-direct-note{
+  display:block;
+  margin-top:4px;
+  font-size:.72rem;
+  line-height:1.35;
+  color:var(--color-text-soft);
+  font-style:italic;
+}
 .lightbox-qr{
   background:#fff;
   padding:22px;
