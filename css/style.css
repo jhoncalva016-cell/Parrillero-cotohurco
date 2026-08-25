@@ -587,8 +587,11 @@ p{margin:0 0 1rem;}
   position:relative;
 }
 .dish-card .dish-media{
-  height:140px;
-  background:linear-gradient(135deg,var(--color-wood-light),var(--color-ember));
+  height:170px;
+  box-sizing:border-box;
+  padding:10px;
+  background-image:linear-gradient(135deg,var(--color-wood-light),var(--color-ember));
+  background-color:var(--color-cream);
   display:flex;align-items:center;justify-content:center;
   font-size:2.6rem;
   color:rgba(255,255,255,0.9);
