@@ -421,6 +421,43 @@ p{margin:0 0 1rem;}
   color:var(--color-ember);
 }
 
+/* ---------- QR de conexión (tarjeta "WiFi gratis") ---------- */
+.service-card.has-qr{display:flex;flex-direction:column;}
+.service-qr-box{
+  margin-top:16px;
+  padding:14px;
+  background:var(--color-cream);
+  border:1px dashed rgba(196,58,26,0.35);
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:8px;
+}
+.service-qr-img{
+  width:104px;
+  height:104px;
+  background:#fff;
+  padding:6px;
+  border-radius:8px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  cursor:zoom-in;
+  transition:transform .15s ease;
+}
+.service-qr-img:hover{transform:scale(1.05);}
+.service-qr-caption{
+  font-size:.78rem;
+  line-height:1.35;
+  color:var(--color-text-soft);
+}
+.lightbox-qr{
+  background:#fff;
+  padding:22px;
+  max-width:320px;
+  max-height:320px;
+}
+
 /* ---------- DETALLE DE SERVICIOS (fotos / croquis) ---------- */
 .service-detail-section{
   margin-bottom:36px;
