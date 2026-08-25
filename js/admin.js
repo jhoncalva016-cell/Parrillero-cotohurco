@@ -365,6 +365,8 @@ function renderServiceTable(data) {
     form.elements.iconImage.value = item.iconImage || "";
     form.elements.detailImage.value = item.detailImage || "";
     form.elements.gallery.value = JSON.stringify(item.gallery || []);
+    form.elements.qrImage.value = item.qrImage || "";
+    form.elements.qrCaption.value = item.qrCaption || "";
     refreshImagePreviews(form);
     refreshGalleryManagers(form);
     document.getElementById("svc-form-title").textContent = "Editar servicio";

@@ -101,7 +101,9 @@ const DEFAULT_DATA = {
       icon: "📶",
       iconImage: "images/icon-wifi.png",
       title: "WiFi gratis",
-      desc: "Conéctate a la red <strong>CNT_ELCOTURCO-5G</strong> con la clave <strong>PARRILLERO2008</strong> y disfruta conectado."
+      desc: "Conéctate a la red <strong>CNT_ELCOTURCO-5G</strong> con la clave <strong>PARRILLERO2008</strong> y disfruta conectado.",
+      qrImage: "images/wifi-qr.png",
+      qrCaption: "Escanéalo con la cámara de tu celular y te conectas al toque, sin escribir nada."
     }
   ],
 

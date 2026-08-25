@@ -181,11 +181,17 @@ function renderServices(data, targetSel) {
     const tag = s.link ? "a" : "div";
     const openAttrs = s.link ? ` href="${s.link}"` : "";
     const moreHint = s.link ? `<span class="service-card-more">Ver más →</span>` : "";
+    const qrHTML = s.qrImage ? `
+        <div class="service-qr-box">
+          <img class="service-qr-img" src="${s.qrImage}" alt="Código QR para conectarte a ${s.title}">
+          <span class="service-qr-caption">${s.qrCaption || "Escanéalo con la cámara de tu celular para conectarte."}</span>
+        </div>` : "";
     target.appendChild(el(`
-      <${tag}${openAttrs} class="service-card${s.link ? " is-link" : ""}">
+      <${tag}${openAttrs} class="service-card${s.link ? " is-link" : ""}${s.qrImage ? " has-qr" : ""}">
         ${iconHTML}
         <h3>${s.title}</h3>
         <p>${s.desc}</p>
+        ${qrHTML}
         ${moreHint}
       </${tag}>
     `));
@@ -221,9 +227,19 @@ function serviceDetailHTML(s) {
   `;
 }
 
-/* Lightbox simple: click en una foto de la galería de servicios la muestra
-   ampliada; click de nuevo (en cualquier parte del overlay) la cierra. */
+/* Lightbox simple: click en una foto de la galería de servicios, o en un
+   código QR de servicio, la muestra ampliada; click de nuevo (en cualquier
+   parte del overlay) la cierra. */
 document.addEventListener("click", e => {
+  const qrImg = e.target.closest(".service-qr-img");
+  if (qrImg) {
+    e.preventDefault();
+    e.stopPropagation();
+    const overlay = el(`<div class="lightbox-overlay"><img class="lightbox-img lightbox-qr" src="${qrImg.src}" alt=""></div>`);
+    document.body.appendChild(overlay);
+    overlay.addEventListener("click", () => overlay.remove());
+    return;
+  }
   const photo = e.target.closest(".service-detail-photo");
   if (!photo) return;
   const match = /url\((['"]?)(.*?)\1\)/.exec(photo.style.backgroundImage || "");
