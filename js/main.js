@@ -339,7 +339,7 @@ function dishCardHTML(item, opts) {
   const local = item.priceLocal;
   const llevar = (Number(local) + Number(0.25)).toFixed(2);
   const media = item.image
-    ? `<div class="dish-media" style="background-image:url('${item.image}');background-size:cover;background-position:center;"></div>`
+    ? `<div class="dish-media" style="background-image:url('${item.image}');background-size:contain;background-repeat:no-repeat;background-position:center;"></div>`
     : `<div class="dish-media">🍢</div>`;
   return `
     <div class="dish-card" data-category="${item.category}">
@@ -409,7 +409,7 @@ function stockBadgeHTML(item) {
 function dailyCardHTML(item) {
   const priced = item.price > 0;
   const media = item.image
-    ? `<div class="dish-media" style="background-image:url('${item.image}');background-size:cover;background-position:center;"></div>`
+    ? `<div class="dish-media" style="background-image:url('${item.image}');background-size:contain;background-repeat:no-repeat;background-position:center;"></div>`
     : `<div class="dish-media">🌽</div>`;
   return `
     <div class="dish-card">
