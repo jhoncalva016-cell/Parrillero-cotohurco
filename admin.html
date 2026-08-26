@@ -367,6 +367,24 @@
           <div class="form-actions"><button type="submit" class="btn btn-primary">Actualizar contraseña</button></div>
         </form>
       </div>
+      <div class="admin-card" style="max-width:520px;">
+        <h3>Respaldo de datos</h3>
+        <p style="font-size:.85rem;color:var(--color-text-soft);">
+          Importante: todo lo que editas aquí (platos, fotos, precios, promociones) se guarda
+          <strong>solo en este navegador/celular</strong>, no en internet. Por eso un cambio hecho en la
+          computadora <strong>no aparece automáticamente en tu celular</strong> (ni en el celular de tus
+          clientes) — son "cajas" separadas. Usa estos botones para mover tus datos de un dispositivo a otro,
+          o para mandármelos y que yo los deje fijos en el sitio para todos.
+        </p>
+        <div class="form-actions" style="margin-top:6px;">
+          <button type="button" class="btn btn-primary" id="export-data-btn">Descargar mis datos (.json)</button>
+        </div>
+        <div class="form-field full" style="margin-top:16px;">
+          <label>Cargar datos desde un archivo .json</label>
+          <input type="file" accept="application/json" id="import-data-input">
+          <span class="img-field-hint">Esto reemplaza todo lo que hay guardado en este navegador por lo que traiga el archivo.</span>
+        </div>
+      </div>
       <div class="admin-card" style="max-width:420px;">
         <h3>Restaurar valores de fábrica</h3>
         <p style="font-size:.85rem;color:var(--color-text-soft);">Esto borrará todos los cambios guardados en este navegador y volverá a los datos originales del proyecto.</p>
