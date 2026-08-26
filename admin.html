@@ -20,7 +20,8 @@
     <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
   </form>
   <p id="login-error" style="color:var(--color-ember);font-size:.85rem;display:none;margin-top:8px;">Contraseña incorrecta.</p>
-  <p style="font-size:.75rem;color:#9c8f7e;margin-top:18px;">Contraseña por defecto: <code>cothourco2026</code> (puedes cambiarla luego en la pestaña "Cuenta").</p>
+  <p id="login-hint-local" style="font-size:.75rem;color:#9c8f7e;margin-top:18px;">Contraseña por defecto: <code>cothourco2026</code> (puedes cambiarla luego en la pestaña "Cuenta").</p>
+  <p id="login-hint-cloud" style="font-size:.75rem;color:#9c8f7e;margin-top:18px;display:none;">Usa la contraseña que creaste para el panel en tu base de datos (Firebase → Authentication).</p>
 </div>
 
 <!-- ---------- PANEL (oculto hasta iniciar sesión) ---------- -->
@@ -397,6 +398,10 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="js/firebase-config.js"></script>
 <script src="js/data.js"></script>
 <script src="js/store.js"></script>
 <script src="js/admin.js"></script>
