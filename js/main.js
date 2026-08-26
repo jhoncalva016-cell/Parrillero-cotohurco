@@ -2,9 +2,8 @@
    PARRILLERO EL COTHOURCO — Lógica del sitio público
    ============================================================ */
 
-document.addEventListener("DOMContentLoaded", function () {
-  Store.init();
-  const data = Store.getAll();
+document.addEventListener("DOMContentLoaded", async function () {
+  const data = await Store.init();
 
   setupNav();
   renderRestaurantInfo(data);

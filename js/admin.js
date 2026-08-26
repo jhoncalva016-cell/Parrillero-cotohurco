@@ -16,11 +16,13 @@ const DEFAULT_PASS = "cothourco2026";
 
 let editing = { servicio: null, menu: null, daily: null, promo: null, zone: null };
 
-document.addEventListener("DOMContentLoaded", function () {
-  Store.init();
+document.addEventListener("DOMContentLoaded", async function () {
+  Store.onSyncError = () => toast("⚠️ No se pudo conectar con la base de datos en la nube. Revisa tu internet — los cambios que hagas ahora solo quedarán en este navegador.");
+
+  await Store.init();
 
   wireLogin();
-  if (isLoggedIn()) showApp();
+  if (!(typeof auth !== "undefined" && auth) && isLoggedIn()) showApp();
 
   wireTabs();
   wireImageFields();
@@ -214,7 +216,17 @@ function refreshGalleryManagers(form) {
   form.querySelectorAll(".gallery-manager").forEach(manager => renderGalleryThumbs(manager));
 }
 
-/* ---------------- AUTENTICACIÓN ---------------- */
+/* ---------------- AUTENTICACIÓN ----------------
+   Si ya conectaste el sitio a Firebase (js/firebase-config.js con tus
+   datos reales), el acceso al panel lo maneja Firebase Authentication
+   de verdad: solo entra quien conozca la contraseña que creaste en
+   Firebase → Authentication → Users, y esa misma contraseña es la
+   única forma de guardar cambios en la base de datos compartida
+   (ver reglas de Firestore).
+
+   Si Firebase todavía NO está configurado, el panel sigue funcionando
+   exactamente como antes: una contraseña simple guardada en este
+   navegador (no es seguridad real, solo evita ediciones accidentales). */
 function getPass() { return localStorage.getItem(PASS_KEY) || DEFAULT_PASS; }
 function setPass(p) { localStorage.setItem(PASS_KEY, p); }
 function isLoggedIn() { return sessionStorage.getItem(SESSION_KEY) === "1"; }
@@ -223,10 +235,44 @@ function showApp() {
   document.getElementById("admin-login").style.display = "none";
   document.getElementById("admin-app").style.display = "block";
 }
+function showLoginScreen() {
+  document.getElementById("admin-login").style.display = "block";
+  document.getElementById("admin-app").style.display = "none";
+}
 
 function wireLogin() {
   const form = document.getElementById("login-form");
   const error = document.getElementById("login-error");
+
+  if (typeof auth !== "undefined" && auth) {
+    document.getElementById("login-hint-local").style.display = "none";
+    document.getElementById("login-hint-cloud").style.display = "block";
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        showApp();
+        renderAll();
+      } else {
+        showLoginScreen();
+      }
+    });
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const pw = document.getElementById("login-password").value;
+      auth.signInWithEmailAndPassword(ADMIN_EMAIL, pw)
+        .then(() => { error.style.display = "none"; form.reset(); })
+        .catch(() => { error.style.display = "block"; });
+    });
+
+    const logoutBtn = document.getElementById("logout-btn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => auth.signOut());
+    }
+    return;
+  }
+
+  /* ---- Modo de respaldo, sin Firebase configurado todavía ---- */
   form.addEventListener("submit", e => {
     e.preventDefault();
     const pw = document.getElementById("login-password").value;
@@ -705,6 +751,18 @@ function wireAccountForms() {
   pwForm.addEventListener("submit", e => {
     e.preventDefault();
     const obj = formToObject(pwForm);
+
+    if (typeof auth !== "undefined" && auth) {
+      const user = auth.currentUser;
+      if (!user) { toast("Tu sesión expiró, vuelve a iniciar sesión."); return; }
+      const cred = firebase.auth.EmailAuthProvider.credential(ADMIN_EMAIL, obj.current);
+      user.reauthenticateWithCredential(cred)
+        .then(() => user.updatePassword(obj.next))
+        .then(() => { pwForm.reset(); toast("Contraseña actualizada."); })
+        .catch(() => toast("La contraseña actual no es correcta."));
+      return;
+    }
+
     if (obj.current !== getPass()) {
       toast("La contraseña actual no es correcta.");
       return;

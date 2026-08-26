@@ -1,47 +1,60 @@
 /* ============================================================
    PARRILLERO EL COTHOURCO — Capa de almacenamiento (Store)
    ============================================================
-   Envuelve localStorage para guardar toda la información del
-   sitio (carta, especiales del día, promociones, servicios,
-   reglas de domicilio) directamente en el navegador. Esto
-   permite que el Panel Admin actualice precios y disponibilidad
-   "a diario" sin necesidad de un servidor.
+   Fuente de datos: Firebase Firestore (base de datos real en la
+   nube), en el documento site/main. Así, cuando algo se guarda
+   desde el Panel Admin, cualquier celular o computadora que
+   visite el sitio después ve el mismo contenido — no depende del
+   navegador que hizo el cambio.
 
-   Si en el futuro el restaurante quiere que estos datos se
-   sincronicen entre varios dispositivos (por ejemplo, que el
-   celular del administrador actualice lo que ven los clientes
-   en tiempo real), este Store es el único archivo que habría
-   que reemplazar por llamadas a una API/backend real.
+   Si Firebase todavía no está configurado (js/firebase-config.js
+   sigue con los valores de ejemplo) o no hay conexión a internet,
+   el sitio sigue funcionando: usa la última copia guardada en
+   este navegador (localStorage) y, si no hay ninguna, los valores
+   por defecto de este proyecto (js/data.js).
    ============================================================ */
 
 const STORAGE_KEY = "cothourco_data_v1";
 
 const Store = (function () {
 
-  function _load() {
+  let _cache = null;
+
+  /* Se puede asignar desde afuera (admin.js) para mostrar un aviso
+     cuando un guardado no llegó a la nube, ej.:
+       Store.onSyncError = (err) => toast("No se pudo guardar en la nube...");
+     Y opcionalmente para avisar cuando SÍ se conecta bien:
+       Store.onSyncOk = () => ... */
+  let onSyncError = null;
+  let onSyncOk = null;
+
+  function _docRef() {
+    return (typeof db !== "undefined" && db) ? db.collection("site").doc("main") : null;
+  }
+
+  function _loadLocalCache() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return null;
-      return JSON.parse(raw);
+      return raw ? JSON.parse(raw) : null;
     } catch (e) {
-      console.error("Error leyendo datos guardados, se usarán los valores por defecto.", e);
+      console.error("Error leyendo la copia local de los datos.", e);
       return null;
     }
   }
 
-  function _save(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  function _saveLocalCache(data) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (e) {
+      console.error("Error guardando la copia local de los datos.", e);
+    }
   }
 
-  /* Rellena en los datos YA GUARDADOS del navegador cualquier campo nuevo
-     que el código haya incorporado después de que ese navegador guardó
-     su copia (por ejemplo "link"/"hasDetail"/"gallery" en servicios, o un
-     campo nuevo en "restaurant"). Nunca toca ni sobreescribe una clave que
-     ya exista (aunque esté vacía) — solo agrega las que faltan por
-     completo, así que ninguna personalización hecha desde el Panel Admin
-     se pierde. Sin esto, un navegador que ya tenía datos guardados antes
-     de una actualización del sitio se queda "atascado" sin ver las
-     funciones nuevas hasta borrar el almacenamiento local. */
+  /* Rellena en los datos YA GUARDADOS cualquier campo nuevo que el
+     código haya incorporado después de que se guardó esa copia (por
+     ejemplo un campo nuevo en "restaurant"). Nunca toca ni sobreescribe
+     una clave que ya exista (aunque esté vacía) — solo agrega las que
+     faltan por completo, así ninguna personalización se pierde. */
   function _reconcileWithDefaults(data) {
     let changed = false;
 
@@ -70,29 +83,74 @@ const Store = (function () {
     return changed;
   }
 
-  function init() {
-    let data = _load();
-    if (!data) {
-      data = JSON.parse(JSON.stringify(DEFAULT_DATA));
-      _save(data);
-    } else if (_reconcileWithDefaults(data)) {
-      _save(data);
+  /* Carga inicial: intenta traer los datos reales desde Firestore.
+     Devuelve una Promise — quien la llame debe usar await/.then(). */
+  async function init() {
+    const ref = _docRef();
+
+    if (ref) {
+      try {
+        const snap = await ref.get();
+        if (snap.exists) {
+          _cache = snap.data();
+          if (_reconcileWithDefaults(_cache)) {
+            ref.set(_cache).catch(() => {});
+          }
+        } else {
+          _cache = JSON.parse(JSON.stringify(DEFAULT_DATA));
+          await ref.set(_cache);
+        }
+        _saveLocalCache(_cache);
+        if (onSyncOk) onSyncOk();
+        return _cache;
+      } catch (e) {
+        console.error("No se pudo conectar con la base de datos en la nube. Usando la última copia guardada en este navegador.", e);
+        if (onSyncError) onSyncError(e);
+        /* sigue abajo con el respaldo local */
+      }
     }
-    return data;
+
+    _cache = _loadLocalCache();
+    if (!_cache) {
+      _cache = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    } else {
+      _reconcileWithDefaults(_cache);
+    }
+    return _cache;
   }
 
+  /* Acceso síncrono a la última copia ya cargada en memoria (después de
+     await Store.init()). El resto del código del sitio sigue usando
+     Store.getAll() tal como antes. */
   function getAll() {
-    return _load() || init();
+    return _cache || JSON.parse(JSON.stringify(DEFAULT_DATA));
+  }
+
+  /* Guarda: actualiza la copia en memoria y la copia local al instante
+     (para que la pantalla no tenga que esperar), y en paralelo intenta
+     guardar en la nube. Si la nube falla (sin internet, etc.) se avisa
+     por onSyncError pero el cambio queda guardado localmente igual. */
+  function _persist() {
+    _saveLocalCache(_cache);
+    const ref = _docRef();
+    if (!ref) return;
+    ref.set(_cache)
+      .then(() => { if (onSyncOk) onSyncOk(); })
+      .catch(err => {
+        console.error("Error guardando en la nube:", err);
+        if (onSyncError) onSyncError(err);
+      });
   }
 
   function setAll(data) {
-    _save(data);
+    _cache = data;
+    _persist();
   }
 
   function resetToDefaults() {
-    const fresh = JSON.parse(JSON.stringify(DEFAULT_DATA));
-    _save(fresh);
-    return fresh;
+    _cache = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    _persist();
+    return _cache;
   }
 
   function uid(prefix) {
@@ -105,36 +163,33 @@ const Store = (function () {
     const list = data[collectionName];
     const idx = list.findIndex(x => x.id === item.id);
     if (idx >= 0) {
-      // Fusiona en vez de reemplazar por completo: así un campo que no
-      // viene en el formulario (por ejemplo "link" o "hasDetail", que no
-      // son editables desde el Panel Admin) no se pierde al guardar.
       list[idx] = Object.assign({}, list[idx], item);
     } else {
       item.id = item.id || uid(collectionName.slice(0, 4));
       list.push(item);
     }
-    setAll(data);
+    _persist();
     return data;
   }
 
   function removeItem(collectionName, id) {
     const data = getAll();
     data[collectionName] = data[collectionName].filter(x => x.id !== id);
-    setAll(data);
+    _persist();
     return data;
   }
 
   function updateRestaurant(fields) {
     const data = getAll();
     data.restaurant = Object.assign({}, data.restaurant, fields);
-    setAll(data);
+    _persist();
     return data;
   }
 
   function updateDelivery(fields) {
     const data = getAll();
     data.delivery = Object.assign({}, data.delivery, fields);
-    setAll(data);
+    _persist();
     return data;
   }
 
@@ -144,14 +199,14 @@ const Store = (function () {
     const idx = list.findIndex(x => x.id === tier.id);
     if (idx >= 0) list[idx] = tier;
     else { tier.id = tier.id || uid("zona"); list.push(tier); }
-    setAll(data);
+    _persist();
     return data;
   }
 
   function removeDeliveryTier(id) {
     const data = getAll();
     data.delivery.tiers = data.delivery.tiers.filter(x => x.id !== id);
-    setAll(data);
+    _persist();
     return data;
   }
 
@@ -166,6 +221,10 @@ const Store = (function () {
     updateRestaurant,
     updateDelivery,
     upsertDeliveryTier,
-    removeDeliveryTier
+    removeDeliveryTier,
+    get onSyncError() { return onSyncError; },
+    set onSyncError(fn) { onSyncError = fn; },
+    get onSyncOk() { return onSyncOk; },
+    set onSyncOk(fn) { onSyncOk = fn; }
   };
 })();
