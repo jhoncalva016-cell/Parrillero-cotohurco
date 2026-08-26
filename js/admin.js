@@ -720,6 +720,52 @@ function wireAccountForms() {
     renderAll();
     toast("Datos restaurados a los valores de fábrica.");
   });
+
+  document.getElementById("export-data-btn").addEventListener("click", () => {
+    const data = Store.getAll();
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const fecha = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = "cothourco-datos-" + fecha + ".json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    toast("Datos descargados.");
+  });
+
+  document.getElementById("import-data-input").addEventListener("change", e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      let parsed;
+      try {
+        parsed = JSON.parse(reader.result);
+      } catch (err) {
+        toast("Ese archivo no es un .json válido.");
+        e.target.value = "";
+        return;
+      }
+      if (!parsed || typeof parsed !== "object" || !parsed.restaurant) {
+        toast("Ese archivo no tiene el formato esperado.");
+        e.target.value = "";
+        return;
+      }
+      if (!confirm("Esto reemplaza TODO lo guardado en este navegador con el contenido del archivo. ¿Continuar?")) {
+        e.target.value = "";
+        return;
+      }
+      Store.setAll(parsed);
+      renderAll();
+      e.target.value = "";
+      toast("Datos cargados correctamente.");
+    };
+    reader.readAsText(file);
+  });
 }
 
 /* ---------------- utilidad de dinero (compartida con main.js) ---------------- */
