@@ -36,7 +36,7 @@ const DEFAULT_DATA = {
     hoursWeekday: "Lun–Jue 07:00–19:30 · Vie–Sáb 07:00–22:00 · Dom 07:00–16:00",
     hoursNote: "Horario de atención",
     facebook: "https://www.facebook.com/Elcotohurco/",
-    instagram: "",
+    instagram: "https://www.instagram.com/parrillero_el_cotohurco/",
     tiktok: "",
     feedbackUrl: "",
     reservationUrl: "",
@@ -117,7 +117,8 @@ const DEFAULT_DATA = {
     { id: "menestras", name: "Menestras" },
     { id: "asados", name: "Asados" },
     { id: "mariscos", name: "Mariscos" },
-    { id: "especialidades", name: "Especialidades de la Casa" }
+    { id: "especialidades", name: "Especialidades de la Casa" },
+    { id: "sopas", name: "Sopas" }
   ],
 
   /* -------------------- LA CARTA (platos oficiales) -------------------- */
@@ -129,7 +130,7 @@ const DEFAULT_DATA = {
       description:
         "Selección mini de carnes a la parrilla, ideal para una persona. Acompañada de guarniciones de la casa.",
       priceLocal: 6.50,
-      image: "",
+      image: "images/menu-parrillada-mini.jpg",
       active: true,
       featured: true
     },
@@ -140,7 +141,7 @@ const DEFAULT_DATA = {
       description:
         "Generosa combinación de carnes a la parrilla para compartir o para el comensal con mucha hambre. Acompañada de guarniciones de la casa.",
       priceLocal: 10.00,
-      image: "",
+      image: "images/menu-parrillada-completa.jpg",
       active: true,
       featured: true
     },
@@ -151,7 +152,7 @@ const DEFAULT_DATA = {
       description:
         "Nuestra especialidad más completa: combinación de carnes a la parrilla y mariscos en un solo plato. Ideal para compartir.",
       priceLocal: 20.00,
-      image: "",
+      image: "images/menu-parrillada-mar-tierra.jpg",
       active: true,
       featured: true
     },
@@ -225,6 +226,17 @@ const DEFAULT_DATA = {
       image: "",
       active: true,
       featured: false
+    },
+    {
+      id: "menu-11",
+      category: "sopas",
+      name: "Encebollado",
+      description:
+        "Disfruta de la tradicional sopa ecuatoriana hecha con el mas fresco pescado (Arbacora) y las mejores especias de la cierra, acompañado con una guarnicion de canguil con chifle.",
+      priceLocal: 3.00,
+      image: "images/menu-encebollado.jpg",
+      active: true,
+      featured: true
     }
   ],
 
